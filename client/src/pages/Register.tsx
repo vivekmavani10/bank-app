@@ -1,0 +1,106 @@
+import React from "react";
+import { useState } from "react";
+import Input from "../components/Input";
+import Button from "../components/Button";
+
+const Register: React.FC = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleRegister = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    setError("");
+
+    if (!name || !phone || !password || !confirmPassword) {
+      setError("Please fill all fields!");
+      return;
+    }
+
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Please enter a valid email address!");
+      return;
+    }
+
+    if (phone.length !== 10 || isNaN(Number(phone))) {
+      setError("Please enter a valid phone number!");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords does not match!");
+      return;
+    }
+  };
+
+  return (
+    <div className="bg-gray-100 p-5 border-none rounded-lg flex items-center justify-center min-h-[calc(100vh-95px)]">
+      <div className="bg-white p-6 border-none rounded-lg shadow-md w-full max-w-md">
+        <h1 className="text-2xl font-semibold text-center">
+          Register to KV Bank
+        </h1>
+        <form className="mt-5" onSubmit={handleRegister}>
+        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+          <Input
+            label="Full Name"
+            type="text"
+            name="fullName"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter your full name"
+          />
+          <Input
+            label="Email"
+            type="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+          />
+          <Input
+            label="Phone Number"
+            type="tel"
+            name="phone"
+            value={phone}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (/^\d{0,10}$/.test(value)) {
+                setPhone(value);
+              }
+            }}
+            placeholder="Enter your phone number"
+          />
+          <Input
+            label="Password"
+            type="password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password"
+          />
+          <Input
+            label="Confirm Password"
+            type="password"
+            name="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm your password"
+          />
+          <Button type="submit" children="Register" className="w-full mt-2" />
+        </form>
+        <p className="text-sm text-gray-600 mt-4 text-center">
+          Already have an account?{" "}
+          <a href="/login" className="text-gray-950">
+            Login
+          </a>
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default Register;
