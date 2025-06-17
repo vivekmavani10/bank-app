@@ -57,3 +57,9 @@ CREATE TABLE notifications (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
+
+-- remove unique email
+ALTER TABLE `bank`.`users` 
+DROP INDEX `email_UNIQUE` ;
+;
+
