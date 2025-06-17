@@ -14,6 +14,15 @@ export const registerMobile = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
+      const phonevalidation = /^\d{10}$/;
+    if (!phonevalidation.test(phone_number)) {
+      return res.status(400).json({ message: "Phone number must be exactly 10 digits" });
+    }
+
+    if (password.length !== 6) {
+      return res.status(400).json({ message: "Password must be exactly 6 characters long" });
+    }
+
     if (password !== confirm_password) {
       return res.status(400).json({ message: "Passwords do not match" });
     }
