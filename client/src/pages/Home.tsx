@@ -14,7 +14,7 @@ const Home: React.FC = () => {
              Explore our services, manage your accounts, and enjoy a seamless banking experience with KV Bank.
               Your trusted partner for secure and reliable banking services. We offer a range of financial solutions tailored to meet your needs.
           </p>
-          <button className="bg-[#d45f5f] text-white px-6 py-3 rounded-full hover:bg-[#008ecc] transition">
+          <button className="bg-[#d45f5f] text-white px-6 py-3 rounded-full hover:bg-[#e799aa] transition">
             Read More
           </button>
         </div>

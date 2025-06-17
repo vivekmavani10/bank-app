@@ -21,7 +21,7 @@ const AboutUs: React.FC = () => {
           <p className="text-gray-700 text-lg md:text-xl mb-6">
             Backed by a passionate team and cutting-edge technology, KV Bank ensures your money is always in safe hands—because we value your trust.
           </p>
-          <button className="bg-[#d45f5f] text-white px-6 py-3 rounded-full hover:bg-[#008ecc] transition">
+          <button className="bg-[#d45f5f] text-white px-6 py-3 rounded-full hover:bg-[#e799aa] transition">
             Read More
           </button>
         </div>

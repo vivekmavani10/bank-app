@@ -33,16 +33,16 @@ const ContactUs: React.FC = () => {
           </div>
           <div className="mt-6">
             <div className="flex gap-6 text-[#ef636c] text-3xl">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#005f99]">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#e799aa]">
                 <IconWrapper Icon={FaFacebook} />
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#005f99]">
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#e799aa]">
                 <IconWrapper Icon={FaTwitter} />
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#005f99]">
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#e799aa]">
                 <IconWrapper Icon={FaLinkedin} />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#005f99]">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#e799aa]">
                 <IconWrapper Icon={FaInstagram} />
               </a>
             </div>
