@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
 
@@ -10,7 +9,6 @@ const Login: React.FC = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-
     setError("");
 
     if (!phone || !password) {
@@ -22,17 +20,20 @@ const Login: React.FC = () => {
       setError("Please enter a valid phone number!");
       return;
     }
+
+    console.log("Login successful!");
   };
 
   return (
-    <div>
-      <div className="bg-gray-100 p-5 border-none rounded-lg flex items-center justify-center min-h-[calc(100vh-95px)]">
-        <div className="bg-white p-6 border-none rounded-lg shadow-md w-full max-w-md">
-          <h1 className="text-2xl font-semibold text-center">
-            Login to KV Bank
+    <div className="bg-[#fcfcfc] min-h-[calc(100vh-95px)] pt-24 pb-16 ">
+      <div className="flex items-center justify-center px-6">
+        <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+          <h1 className="text-3xl font-bold text-center text-[#004466]">
+            Login to <span className="text-[#d7555e]">KV Bank</span>
           </h1>
           <form className="mt-5" onSubmit={handleLogin}>
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+            {error && <p className="text-red-500 text-sm text-center mb-3">{error}</p>}
+
             <Input
               label="Phone Number"
               type="tel"
@@ -45,7 +46,6 @@ const Login: React.FC = () => {
                 }
               }}
               placeholder="Enter your phone number"
-            //   required={true}
             />
             <Input
               label="Password"
@@ -54,13 +54,18 @@ const Login: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
-            //   required={true}
             />
-            <Button type="submit" children="Login" className="w-full mt-2" />
+            <Button
+              type="submit"
+              className="w-full mt-2 bg-[#d7555e] text-white py-2 rounded-full hover:bg-[#e799aa] transition"
+            >
+              Login
+            </Button>
           </form>
+
           <p className="text-sm text-gray-600 mt-4 text-center">
             Don't have an account?{" "}
-            <a href="/register" className="text-gray-950">
+            <a href="/register" className="text-[#d7555e] font-semibold hover:underline">
               Register
             </a>
           </p>

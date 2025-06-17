@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
 
@@ -13,7 +12,6 @@ const Register: React.FC = () => {
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-
     setError("");
 
     if (!name || !phone || !password || !confirmPassword) {
@@ -32,19 +30,21 @@ const Register: React.FC = () => {
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords does not match!");
+      setError("Passwords do not match!");
       return;
     }
+
+    console.log("Registration successful!");
   };
 
   return (
-    <div className="bg-gray-100 p-5 border-none rounded-lg flex items-center justify-center min-h-[calc(100vh-95px)]">
-      <div className="bg-white p-6 border-none rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-semibold text-center">
-          Register to KV Bank
+    <div className="bg-[#fcfcfc] min-h-[calc(100vh-95px)] flex items-center justify-center">
+      <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+        <h1 className="text-3xl font-bold text-center text-[#004466]">
+          Register to <span className="text-[#d7555e]">KV Bank</span>
         </h1>
         <form className="mt-5" onSubmit={handleRegister}>
-        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+          {error && <p className="text-red-500 text-sm text-center mb-3">{error}</p>}
           <Input
             label="Full Name"
             type="text"
@@ -90,11 +90,16 @@ const Register: React.FC = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm your password"
           />
-          <Button type="submit" children="Register" className="w-full mt-2" />
+          <Button
+            type="submit"
+            className="w-full mt-2 bg-[#d7555e] text-white py-2 rounded-full hover:bg-[#e799aa] transition"
+          >
+            Register
+          </Button>
         </form>
         <p className="text-sm text-gray-600 mt-4 text-center">
           Already have an account?{" "}
-          <a href="/login" className="text-gray-950">
+          <a href="/login" className="text-[#d7555e] font-semibold hover:underline">
             Login
           </a>
         </p>
