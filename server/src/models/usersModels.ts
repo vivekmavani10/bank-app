@@ -1,9 +1,11 @@
 import { Pool } from "mysql2/promise";
 
 export interface User {
+  user_id?: number;
   user_uuid: string;
   full_name: string;
   email: string;
+  role: string;
   phone_number: string;
   password_hash: string;
 }
