@@ -8,29 +8,45 @@ const usersModel = new UsersModel(dbPool);
 
 export const registerMobile = async (req: Request, res: Response) => {
   try {
-    const { full_name, email, phone_number, password, confirm_password } = req.body;
+    const { full_name, email, phone_number, password, confirm_password } =
+      req.body;
 
-    if (!full_name || !email || !phone_number || !password || !confirm_password) {
+    if (
+      !full_name ||
+      !email ||
+      !phone_number ||
+      !password ||
+      !confirm_password
+    ) {
       return res.status(400).json({ message: "All fields are required" });
     }
+    const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailValidation.test(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
 
-      const phonevalidation = /^\d{10}$/;
+    const phonevalidation = /^\d{10}$/;
     if (!phonevalidation.test(phone_number)) {
-      return res.status(400).json({ message: "Phone number must be exactly 10 digits" });
+      return res
+        .status(400)
+        .json({ message: "Phone number must be exactly 10 digits" });
     }
 
     if (password.length !== 6) {
-      return res.status(400).json({ message: "Password must be exactly 6 characters long" });
+      return res
+        .status(400)
+        .json({ message: "Password must be exactly 6 characters long" });
     }
 
-    
     if (password !== confirm_password) {
       return res.status(400).json({ message: "Passwords do not match" });
     }
 
     const existingUser = await usersModel.findUserByPhone(phone_number);
     if (existingUser) {
-      return res.status(409).json({ message: "This mobile number already exists" });
+      return res
+        .status(409)
+        .json({ message: "This mobile number already exists" });
     }
 
     const Password = password;
@@ -44,8 +60,9 @@ export const registerMobile = async (req: Request, res: Response) => {
     };
 
     const userId = await usersModel.createUser(newUser);
-    return res.status(201).json({ message: "User registered successfully", user_id: userId });
-
+    return res
+      .status(201)
+      .json({ message: "User registered successfully", user_id: userId });
   } catch (error) {
     console.error("Error registering user:", error);
     return res.status(500).json({ message: "Internal server error" });
