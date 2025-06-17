@@ -23,6 +23,7 @@ export const registerMobile = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Password must be exactly 6 characters long" });
     }
 
+    
     if (password !== confirm_password) {
       return res.status(400).json({ message: "Passwords do not match" });
     }
