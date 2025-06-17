@@ -9,28 +9,18 @@ export interface User {
 }
 
 export class UsersModel {
-  private db: Pool;
+  constructor(private db: Pool) {}
 
-  constructor(dbPool: Pool) {
-    this.db = dbPool;
+  // Find user by phone number
+  async findUserByPhone(phone: string): Promise<User | null> {
+    const [rows] = await this.db.execute("SELECT * FROM users WHERE phone_number = ?", [phone]);
+    const result = Array.isArray(rows) && rows.length > 0 ? (rows[0] as User) : null;
+    return result;
   }
 
-  async findUserByPhone(phone_number: string): Promise<any> {
-    const [rows] = await this.db.execute(
-      "SELECT * FROM users WHERE phone_number = ?",
-      [phone_number]
-    );
-    return Array.isArray(rows) ? rows[0] : null;
-  }
-
+  // Create new user
   async createUser(user: User): Promise<number> {
-    const {
-      user_uuid,
-      full_name,
-      email,
-      phone_number,
-      password_hash,
-    } = user;
+    const { user_uuid, full_name, email, phone_number, password_hash } = user;
 
     const [result]: any = await this.db.execute(
       `INSERT INTO users (user_uuid, full_name, email, phone_number, password_hash, created_at)
