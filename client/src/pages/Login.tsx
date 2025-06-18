@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import axios from "axios";
+import { loginUser } from "../api/auth";
 
 const Login: React.FC = () => {
   const [phone, setPhone] = useState("");
@@ -23,19 +23,16 @@ const Login: React.FC = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:4000/api/login", {
+      const { token, message, data } = await loginUser({
         phone_number: phone,
-        password: password,
+        password,
       });
 
-      const { token, message, data } = response.data;
-
-      // Save token & user info if needed
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(data));
 
       console.log("Login successful:", message);
-      // You can redirect here
+      // Redirect if needed
       // window.location.href = "/dashboard";
     } catch (error: any) {
       console.error("Login error:", error);
@@ -48,7 +45,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#fcfcfc] min-h-[calc(100vh-95px)] pt-24 pb-16 ">
+    <div className="bg-[#fcfcfc] min-h-[calc(100vh-95px)] pt-24 pb-16">
       <div className="flex items-center justify-center px-6">
         <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
           <h1 className="text-3xl font-bold text-center text-[#004466]">
