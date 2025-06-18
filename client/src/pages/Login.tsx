@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import axios from "axios";
 
 const Login: React.FC = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -21,7 +22,29 @@ const Login: React.FC = () => {
       return;
     }
 
-    console.log("Login successful!");
+    try {
+      const response = await axios.post("http://localhost:4000/api/login", {
+        phone_number: phone,
+        password: password,
+      });
+
+      const { token, message, data } = response.data;
+
+      // Save token & user info if needed
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(data));
+
+      console.log("Login successful:", message);
+      // You can redirect here
+      // window.location.href = "/dashboard";
+    } catch (error: any) {
+      console.error("Login error:", error);
+      if (error.response?.data?.message) {
+        setError(error.response.data.message);
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
+    }
   };
 
   return (
@@ -32,7 +55,9 @@ const Login: React.FC = () => {
             Login to <span className="text-[#d7555e]">KV Bank</span>
           </h1>
           <form className="mt-5" onSubmit={handleLogin}>
-            {error && <p className="text-red-500 text-sm text-center mb-3">{error}</p>}
+            {error && (
+              <p className="text-red-500 text-sm text-center mb-3">{error}</p>
+            )}
 
             <Input
               label="Phone Number"
@@ -65,7 +90,10 @@ const Login: React.FC = () => {
 
           <p className="text-sm text-gray-600 mt-4 text-center">
             Don't have an account?{" "}
-            <a href="/register" className="text-[#d7555e] font-semibold hover:underline">
+            <a
+              href="/register"
+              className="text-[#d7555e] font-semibold hover:underline"
+            >
               Register
             </a>
           </p>
