@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { registerUser } from "../api/auth";
@@ -10,6 +12,7 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +48,7 @@ const Register: React.FC = () => {
       });
       localStorage.setItem("user", JSON.stringify(data));
       console.log("Registration successful! ", message);
-      window.location.href = "/login";
+      navigate("/login");
     } catch (error: any) {
       console.error("registration error:", error);
       if (error.response?.data?.message) {
@@ -120,12 +123,12 @@ const Register: React.FC = () => {
         </form>
         <p className="text-sm text-gray-600 mt-4 text-center">
           Already have an account?{" "}
-          <a
-            href="/login"
+          <Link
+            to="/login"
             className="text-[#d7555e] font-semibold hover:underline"
           >
             Login
-          </a>
+          </Link>
         </p>
       </div>
     </div>

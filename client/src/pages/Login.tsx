@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { loginUser } from "../api/auth";
@@ -7,6 +9,7 @@ const Login: React.FC = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +36,7 @@ const Login: React.FC = () => {
 
       console.log("Login successful:", message);
       // Redirect if needed
-      // window.location.href = "/dashboard";
+      navigate("/dashboard");
     } catch (error: any) {
       console.error("Login error:", error);
       if (error.response?.data?.message) {
@@ -87,12 +90,12 @@ const Login: React.FC = () => {
 
           <p className="text-sm text-gray-600 mt-4 text-center">
             Don't have an account?{" "}
-            <a
-              href="/register"
+            <Link
+              to="/register"
               className="text-[#d7555e] font-semibold hover:underline"
             >
               Register
-            </a>
+            </Link>
           </p>
         </div>
       </div>
