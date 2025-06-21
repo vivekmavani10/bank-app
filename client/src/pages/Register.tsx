@@ -114,12 +114,7 @@ const Register: React.FC = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm your password"
           />
-          <Button
-            type="submit"
-            className="w-full mt-2 bg-[#d7555e] text-white py-2 rounded-full hover:bg-[#e799aa] transition"
-          >
-            Register
-          </Button>
+          <Button type="submit" className="w-full">Register</Button>
         </form>
         <p className="text-sm text-gray-600 mt-4 text-center">
           Already have an account?{" "}

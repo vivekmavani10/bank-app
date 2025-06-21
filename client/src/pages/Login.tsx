@@ -80,10 +80,7 @@ const Login: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
             />
-            <Button
-              type="submit"
-              className="w-full mt-2 bg-[#d7555e] text-white py-2 rounded-full hover:bg-[#e799aa] transition"
-            >
+            <Button type="submit" className="w-full mt-4">
               Login
             </Button>
           </form>

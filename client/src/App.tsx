@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import AboutUs from "./pages/About";
@@ -72,7 +73,14 @@ const App: React.FC = () => {
         />
 
         {/* Dashboard Routes */}
-        <Route path="/dashboard" element={<UserDashboardLayout />}>
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <UserDashboardLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<Dashboard />} />
           <Route path="apply-account" element={<ApplyAccount />} />
         </Route>
