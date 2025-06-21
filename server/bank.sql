@@ -73,3 +73,8 @@ ADD COLUMN `nominee_relationship` VARCHAR(45) NULL DEFAULT NULL AFTER `nominee_n
 -- add column in users table
 ALTER TABLE `bank`.`users` 
 ADD COLUMN `address` VARCHAR(200) NULL DEFAULT NULL AFTER `created_at`;
+
+
+-- change data type
+ALTER TABLE `bank`.`accounts` 
+CHANGE COLUMN `account_type` `account_type` VARCHAR(50) NULL DEFAULT 'savings' ,
