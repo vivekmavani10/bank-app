@@ -8,8 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UserDashboardLayout from "./layouts/UserDashboardLayout";
 import Dashboard from "./pages/Dashboard";
-// import Profile from "./pages/dashboard/Profile";
-// import Settings from "./pages/dashboard/Settings";
+import ApplyAccount from "./pages/ApplyAccount";
 
 const App: React.FC = () => {
   return (
@@ -75,8 +74,7 @@ const App: React.FC = () => {
         {/* Dashboard Routes */}
         <Route path="/dashboard" element={<UserDashboardLayout />}>
           <Route index element={<Dashboard />} />
-          {/* <Route path="profile" element={<Profile />} />
-          <Route path="settings" element={<Settings />} /> */}
+          <Route path="apply-account" element={<ApplyAccount />} />
         </Route>
       </Routes>
     </>

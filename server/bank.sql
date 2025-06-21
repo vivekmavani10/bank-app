@@ -63,3 +63,13 @@ ALTER TABLE `bank`.`users`
 DROP INDEX `email_UNIQUE` ;
 ;
 
+
+-- add column in accounts table
+ALTER TABLE `bank`.`accounts` 
+ADD COLUMN `nominee_name` VARCHAR(100) NULL DEFAULT NULL AFTER `created_at`,
+ADD COLUMN `nominee_relationship` VARCHAR(45) NULL DEFAULT NULL AFTER `nominee_name`;
+
+
+-- add column in users table
+ALTER TABLE `bank`.`users` 
+ADD COLUMN `address` VARCHAR(200) NULL DEFAULT NULL AFTER `created_at`;
