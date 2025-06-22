@@ -10,6 +10,7 @@ import Register from "./pages/Register";
 import UserDashboardLayout from "./layouts/UserDashboardLayout";
 import Dashboard from "./pages/Dashboard";
 import ApplyAccount from "./pages/ApplyAccount";
+import AdminDashboardLayout from "./layouts/AdminDashbaordLayout";
 
 const App: React.FC = () => {
   return (
@@ -83,6 +84,19 @@ const App: React.FC = () => {
         >
           <Route index element={<Dashboard />} />
           <Route path="apply-account" element={<ApplyAccount />} />
+        </Route>
+
+
+        {/* Admin Dashboard Routes */}
+        <Route
+          path="/admin-dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+
         </Route>
       </Routes>
     </>

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { loginUser } from "../api/auth";
+import { jwtDecode } from "jwt-decode";
 
 const Login: React.FC = () => {
   const [phone, setPhone] = useState("");
@@ -34,9 +35,18 @@ const Login: React.FC = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(data));
 
+      // Decode the token to get role
+      const decoded: any = jwtDecode(token);
+      const role = decoded?.role;
+
+      // Redirect based on role
+      if (role === "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/dashboard");
+      }
+
       console.log("Login successful:", message);
-      // Redirect if needed
-      navigate("/dashboard");
     } catch (error: any) {
       console.error("Login error:", error);
       if (error.response?.data?.message) {
