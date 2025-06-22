@@ -172,8 +172,8 @@ const ApplyAccount: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4">
         <div className="bg-white rounded-lg shadow-lg p-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">Bank Account Application</h1>
-            <p className="text-gray-600">Fill in the details to open your new account</p>
+            <h1 className="text-3xl font-bold text-[#004466] mb-2">Bank Account Application</h1>
+            <p className="text-[#004466]">Fill in the details to open your new account</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
