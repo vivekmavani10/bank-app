@@ -10,9 +10,7 @@ export const createAccount = async (req: Request, res: Response): Promise<void> 
       account_type,
       balance,
       aadhar_number,
-      aadhar_file,
       pan_number,
-      pan_file,
       nominee_name,
       nominee_relationship,
       address,
@@ -20,11 +18,16 @@ export const createAccount = async (req: Request, res: Response): Promise<void> 
 
     const user_id = (req as any).user?.user_id;
 
+    const aadhar_file = (req.files as any)?.aadhar_file?.[0]?.path;
+    const pan_file = (req.files as any)?.pan_file?.[0]?.path;
+
     if (
       !account_type ||
       !balance ||
       !aadhar_number || 
+      !aadhar_file ||
       !pan_number ||
+      !pan_file ||
       !nominee_name ||
       !nominee_relationship ||
       !address
