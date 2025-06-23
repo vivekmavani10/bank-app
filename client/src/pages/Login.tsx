@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import { loginUser } from "../api/auth";
+import { loginUser } from "../api/authApi";
 import { jwtDecode } from "jwt-decode";
 
 const Login: React.FC = () => {

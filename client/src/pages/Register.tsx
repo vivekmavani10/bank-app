@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import { registerUser } from "../api/auth";
+import { registerUser } from "../api/authApi";
 
 const Register: React.FC = () => {
   const [name, setName] = useState("");
