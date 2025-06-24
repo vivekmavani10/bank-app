@@ -135,6 +135,7 @@ const ApplyAccount: React.FC = () => {
         address,
       });
       alert("Account application submitted successfully!");
+      
       resetForm();
     } catch (err: any) {
       console.error(err);

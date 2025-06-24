@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { AccountModel } from "../models/accountModels";
 import { dbPool } from "../config/db";
+import { v4 as uuidv4 } from "uuid"; // Add at top
+
 
 const accountModel = new AccountModel(dbPool);
 
@@ -49,8 +51,10 @@ export const createAccount = async (req: Request, res: Response): Promise<void> 
     }
 
     const account_number = accountModel.generateAccountNumber();
+    const account_uuid = uuidv4(); 
 
     await accountModel.createAccount({
+       account_uuid,
       account_number,
       user_id,
       account_type,
@@ -69,9 +73,11 @@ export const createAccount = async (req: Request, res: Response): Promise<void> 
 
     await accountModel.updateAddress(user_id, address);
 
-    res.status(201).json({ message: "Account application submitted successfully" });
+    res.status(201).json({ message: "Account application submitted successfully" , account_uuid,});
   } catch (error) {
     console.error("Error creating account:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+

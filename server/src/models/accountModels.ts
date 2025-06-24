@@ -1,6 +1,7 @@
 import { Pool } from "mysql2/promise";
 
 export interface Account {
+  account_uuid: string;
   account_number: string;
   user_id: number;
   account_type: string;
@@ -31,6 +32,7 @@ export class AccountModel {
 
   async createAccount(account: Account): Promise<void> {
     const {
+      account_uuid,
       account_number,
       user_id,
       account_type,
@@ -41,9 +43,9 @@ export class AccountModel {
 
     await this.db.execute(
       `INSERT INTO accounts 
-      (account_number, user_id, account_type, balance, nominee_name, nominee_relationship, status, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, 'pending', NOW())`,
-      [account_number, user_id, account_type, balance, nominee_name, nominee_relationship]
+      (account_uuid,account_number, user_id, account_type, balance, nominee_name, nominee_relationship, status, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', NOW())`,
+      [account_uuid, account_number, user_id, account_type, balance, nominee_name, nominee_relationship]
     );
   }
 

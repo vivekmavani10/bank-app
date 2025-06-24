@@ -78,3 +78,7 @@ ADD COLUMN `address` VARCHAR(200) NULL DEFAULT NULL AFTER `created_at`;
 -- change data type
 ALTER TABLE `bank`.`accounts` 
 CHANGE COLUMN `account_type` `account_type` VARCHAR(50) NULL DEFAULT 'savings' ,
+
+-- add column in accounts table
+ALTER TABLE `bank`.`accounts` 
+ADD COLUMN `account_uuid` VARCHAR(50) NULL AFTER `nominee_relationship`;
