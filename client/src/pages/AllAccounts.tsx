@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
 import Dropdown from "../components/Dropdown";
-import { FetchAllAccounts } from "../api/allAccountsApi";
+import {
+  FetchAllAccounts,
+  ApproveAccount,
+  RejectAccount,
+} from "../api/AdminAccountsApi";
+import { toast } from "react-toastify";
 
 const AllAccounts: React.FC = () => {
   const [accounts, setAccounts] = useState<any[]>([]);
   const [statuses, setStatuses] = useState<string[]>([]);
 
   const statusOptions = [
-    { value: "approve", label: "Approve" },
-    { value: "reject", label: "Reject" },
+    { value: "pending", label: "Pending" },
+    { value: "approved", label: "Approve" },
+    { value: "rejected", label: "Reject" },
   ];
 
   useEffect(() => {
@@ -24,6 +30,40 @@ const AllAccounts: React.FC = () => {
 
     fetchAccounts();
   }, []);
+
+  const handleStatusChange = async (
+    index: number,
+    newStatus: string,
+    accountUuid: string
+  ) => {
+    try {
+      if (newStatus === "approved") {
+        await ApproveAccount(accountUuid);
+        toast.success("Account approved successfully!");
+      }
+
+      if (newStatus === "rejected") {
+        await RejectAccount(accountUuid);
+        toast.success("Account rejected successfully!");
+      }
+
+      const updatedStatuses = [...statuses];
+      updatedStatuses[index] = newStatus;
+      setStatuses(updatedStatuses);
+
+      const updatedAccounts = [...accounts];
+      updatedAccounts[index].status = newStatus;
+      setAccounts(updatedAccounts);
+    } catch (error: any) {
+      console.error("Status update error:", error);
+
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -61,14 +101,16 @@ const AllAccounts: React.FC = () => {
                           label=""
                           name="status"
                           value={statuses[index] || ""}
-                          onChange={(e) => {
-                            const updated = [...statuses];
-                            updated[index] = e.target.value;
-                            setStatuses(updated);
-                          }}
+                          onChange={(e) =>
+                            handleStatusChange(
+                              index,
+                              e.target.value,
+                              account.account_uuid
+                            )
+                          }
                           options={statusOptions}
                           placeholder="Pending"
-                          className="w-32"
+                          className={`w-32 rounded-full px-2 py-1 text-black`}
                         />
                       </td>
                     </tr>

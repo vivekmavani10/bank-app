@@ -1,5 +1,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -75,7 +78,7 @@ const App: React.FC = () => {
           }
         />
 
-        {/* Dashboard Routes */}
+        {/* User Dashboard Routes */}
         <Route
           path="/dashboard"
           element={
@@ -87,7 +90,6 @@ const App: React.FC = () => {
           <Route index element={<Dashboard />} />
           <Route path="apply-account" element={<ApplyAccount />} />
         </Route>
-
 
         {/* Admin Dashboard Routes */}
         <Route
@@ -102,6 +104,9 @@ const App: React.FC = () => {
           <Route path="accounts" element={<AllAccounts />} />
         </Route>
       </Routes>
+
+      {/* Toast notifications container */}
+      <ToastContainer position="bottom-center" autoClose={3000} aria-label="Notification" />
     </>
   );
 };
