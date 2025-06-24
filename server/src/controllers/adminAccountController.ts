@@ -1,4 +1,3 @@
-// controllers/adminAccountController.ts
 import { Request, Response } from "express";
 import { dbPool } from "../config/db";
 import { AdminAccountModel } from "../models/adminAccountModel";

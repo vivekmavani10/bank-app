@@ -22,7 +22,10 @@ export class AccountModel {
   constructor(private db: Pool) {}
 
   async findAccountByUserId(user_id: number): Promise<any> {
-    const [rows] = await this.db.execute("SELECT * FROM accounts WHERE user_id = ?", [user_id]);
+    const [rows] = await this.db.execute(
+      "SELECT * FROM accounts WHERE user_id = ?",
+      [user_id]
+    );
     return Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
   }
 
@@ -43,9 +46,17 @@ export class AccountModel {
 
     await this.db.execute(
       `INSERT INTO accounts 
-      (account_uuid,account_number, user_id, account_type, balance, nominee_name, nominee_relationship, status, created_at)
+      (account_uuid, account_number, user_id, account_type, balance, nominee_name, nominee_relationship, status, created_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', NOW())`,
-      [account_uuid, account_number, user_id, account_type, balance, nominee_name, nominee_relationship]
+      [
+        account_uuid,
+        account_number,
+        user_id,
+        account_type,
+        balance,
+        nominee_name,
+        nominee_relationship,
+      ]
     );
   }
 
@@ -61,6 +72,9 @@ export class AccountModel {
   }
 
   async updateAddress(user_id: number, address: string): Promise<void> {
-    await this.db.execute(`UPDATE users SET address = ? WHERE user_id = ?`, [address, user_id]);
+    await this.db.execute(`UPDATE users SET address = ? WHERE user_id = ?`, [
+      address,
+      user_id,
+    ]);
   }
 }

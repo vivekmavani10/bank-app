@@ -1,4 +1,3 @@
-// routes/adminAccountRoutes.ts
 import express from "express";
 import { getAllUserAccounts,approveAccount,rejectAccount  } from "../controllers/adminAccountController";
 import { authenticateToken } from "../middlewares/authMiddleware";

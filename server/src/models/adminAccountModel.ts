@@ -1,4 +1,3 @@
-// models/adminAccountModel.ts
 import { Pool } from "mysql2/promise";
 
 export class AdminAccountModel {

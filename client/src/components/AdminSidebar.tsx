@@ -43,7 +43,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, onClose }) => {
             Dashboard
           </Link>
           <Link
-            to="/dashboard/accounts"
+            to="/admin-dashboard/accounts"
             onClick={onClose}
             className="hover:bg-[#d7555e] hover:text-white rounded-md px-3 py-2 transition"
           >

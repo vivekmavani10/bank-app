@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { AccountModel } from "../models/accountModels";
 import { dbPool } from "../config/db";
-import { v4 as uuidv4 } from "uuid"; // Add at top
-
+import { v4 as uuidv4 } from "uuid";
 
 const accountModel = new AccountModel(dbPool);
 

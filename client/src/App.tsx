@@ -11,6 +11,8 @@ import UserDashboardLayout from "./layouts/UserDashboardLayout";
 import Dashboard from "./pages/Dashboard";
 import ApplyAccount from "./pages/ApplyAccount";
 import AdminDashboardLayout from "./layouts/AdminDashbaordLayout";
+import AdminDashboard from "./pages/AdminDashboard";
+import AllAccounts from "./pages/AllAccounts";
 
 const App: React.FC = () => {
   return (
@@ -96,7 +98,8 @@ const App: React.FC = () => {
             </ProtectedRoute>
           }
         >
-
+          <Route index element={<AdminDashboard />} />
+          <Route path="accounts" element={<AllAccounts />} />
         </Route>
       </Routes>
     </>
