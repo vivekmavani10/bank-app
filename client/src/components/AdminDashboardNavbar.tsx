@@ -22,7 +22,7 @@ const AdminDashboardNavbar: React.FC<AdminDashboardNavbarProps> = ({onToggleSide
         {/* Logo */}
         <div className="flex items-center space-x-2">
           <img src={logo} alt="Logo" className="h-9 w-auto" />
-          <span className="text-xl font-semibold text-black">KV Bank</span>
+          <span className="text-2xl font-bold text-[#004466]">KV Bank</span>
         </div>
 
         {/* Logout Button */}
