@@ -1,7 +1,10 @@
 import express from "express";
-import { createAccount } from "../controllers/accountController";
+import {
+  createAccount,
+  getAccountDetails,
+} from "../controllers/accountController";
 import { authenticateToken } from "../middlewares/authMiddleware";
-import { uploadAccountFiles } from "../middlewares/uploadsMiddleware"
+import { uploadAccountFiles } from "../middlewares/uploadsMiddleware";
 
 const accountRouter = express.Router();
 
@@ -11,5 +14,8 @@ accountRouter.post(
   uploadAccountFiles,
   createAccount
 );
+
+// Get logged in user's account details routes
+accountRouter.get("/account", authenticateToken, getAccountDetails);
 
 export default accountRouter;

@@ -77,4 +77,20 @@ export class AccountModel {
       user_id,
     ]);
   }
+
+  async getAccountDetailsByUserId(user_id: number): Promise<any> {
+    const [rows] = await this.db.execute(
+      `SELECT 
+        u.*,
+        a.*,
+        k.*
+      FROM users u
+      LEFT JOIN accounts a ON u.user_id = a.user_id
+      LEFT JOIN kyc_documents k ON u.user_id = k.user_id
+      WHERE u.user_id = ?;
+      `,
+      [user_id]
+    );
+    return Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
+  }
 }

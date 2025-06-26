@@ -80,3 +80,26 @@ export const createAccount = async (req: Request, res: Response): Promise<void> 
 };
 
 
+// Get logged in user's account details
+export const getAccountDetails = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user_id = (req as any).user?.user_id;
+
+    if (!user_id) {
+      res.status(401).json({ message: "Unauthorized" });
+      return;
+    }
+
+    const account = await accountModel.getAccountDetailsByUserId(user_id);
+
+    if (!account) {
+      res.status(404).json({ message: "Account not found" });
+      return;
+    }
+
+    res.status(200).json(account);
+  } catch (error) {
+    console.error("Error fetching account details:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
