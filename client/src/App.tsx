@@ -106,7 +106,7 @@ const App: React.FC = () => {
       </Routes>
 
       {/* Toast notifications container */}
-      <ToastContainer position="bottom-center" autoClose={3000} aria-label="Notification" />
+      <ToastContainer position="bottom-center" autoClose={2000} aria-label="Notification" />
     </>
   );
 };

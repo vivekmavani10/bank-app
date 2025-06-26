@@ -91,9 +91,11 @@ export const getAccountDetails = async (req: Request, res: Response): Promise<vo
     }
 
     const account = await accountModel.getAccountDetailsByUserId(user_id);
+    
 
-    if (!account) {
-      res.status(404).json({ message: "Account not found" });
+    // If user exists but no account_id and no kyc_id, prompt to create account
+    if (!account.user_id && !account.user_id) {
+      res.status(403).json({ message: "You need to create account" });
       return;
     }
 

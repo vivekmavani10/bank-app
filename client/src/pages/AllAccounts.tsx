@@ -4,7 +4,7 @@ import {
   FetchAllAccounts,
   ApproveAccount,
   RejectAccount,
-} from "../api/AdminAccountsApi";
+} from "../api/adminAccountsApi";
 import { toast } from "react-toastify";
 
 const AllAccounts: React.FC = () => {

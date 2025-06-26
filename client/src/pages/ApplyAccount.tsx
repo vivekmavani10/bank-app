@@ -3,6 +3,7 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import Dropdown from "../components/Dropdown";
 import { applyForAccount } from "../api/applyAccountApi";
+import { toast } from "react-toastify";
 
 const ApplyAccount: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -104,7 +105,7 @@ const ApplyAccount: React.FC = () => {
         nominee_relationship,
         address,
       });
-      alert("Account application submitted successfully!");
+      toast("Account application submitted successfully!");
       setFormData({
         full_name: "",
         email: "",
@@ -121,7 +122,7 @@ const ApplyAccount: React.FC = () => {
       });
     } catch (err: any) {
       console.error(err);
-      setError(err?.response?.data?.message || "Submission failed");
+      toast.error(err?.response?.data?.message || "Submission failed");
     }
   };
 

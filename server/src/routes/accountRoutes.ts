@@ -16,6 +16,6 @@ accountRouter.post(
 );
 
 // Get logged in user's account details routes
-accountRouter.get("/account", authenticateToken, getAccountDetails);
+accountRouter.get("/dashboard", authenticateToken, getAccountDetails);
 
 export default accountRouter;
