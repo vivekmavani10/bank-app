@@ -1,8 +1,8 @@
 import React from "react";
-import {
-  X,
-} from "lucide-react";
+import { X } from "lucide-react";
 import Button from "./Button";
+import { ApproveAccount, RejectAccount } from "../api/adminAccountsApi";
+import { toast } from "react-toastify";
 
 interface CardProps {
   account: {
@@ -28,23 +28,25 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ account, onClose, onStatusUpdate }) => {
-  const handleApprove = async () => {
+   const handleApprove = async () => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await ApproveAccount(account.account_uuid);
+      toast.success("Account approved!");
       onStatusUpdate("approved");
       onClose();
     } catch (err) {
-      console.error("Approval failed:", err);
+      toast.error("Approval failed");
     }
   };
 
   const handleReject = async () => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await RejectAccount(account.account_uuid);
+      toast.success("Account rejected!");
       onStatusUpdate("rejected");
       onClose();
     } catch (err) {
-      console.error("Rejection failed:", err);
+      toast.error("Rejection failed");
     }
   };
 
@@ -72,14 +74,17 @@ const Card: React.FC<CardProps> = ({ account, onClose, onStatusUpdate }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto">
       <div className="bg-white rounded-lg shadow-lg max-w-4xl w-full  mx-2 my-2 relative">
-
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div>
-                <h1 className="text-xl font-bold text-[#004466]">Account Details</h1>
-                <p className="text-gray-600 text-sm">Account {account.account_number}</p>
+                <h1 className="text-xl font-bold text-[#004466]">
+                  Account Details
+                </h1>
+                <p className="text-gray-600 text-sm">
+                  Account {account.account_number}
+                </p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -88,7 +93,8 @@ const Card: React.FC<CardProps> = ({ account, onClose, onStatusUpdate }) => {
                   account.status
                 )}`}
               >
-                {account.status.charAt(0).toUpperCase() + account.status.slice(1)}
+                {account.status.charAt(0).toUpperCase() +
+                  account.status.slice(1)}
               </span>
               <button
                 onClick={onClose}
@@ -100,10 +106,7 @@ const Card: React.FC<CardProps> = ({ account, onClose, onStatusUpdate }) => {
           </div>
         </div>
 
-      
-       <div className="p-6 space-y-6 max-h-[60vh] overflow-y-auto">
-
-          
+        <div className="p-6 space-y-6 max-h-[60vh] overflow-y-auto">
           <div className="space-y-4">
             <h3 className="text-base font-semibold text-gray-900 border-b border-gray-200 pb-2 flex items-center">
               Personal Information
@@ -144,7 +147,6 @@ const Card: React.FC<CardProps> = ({ account, onClose, onStatusUpdate }) => {
             </div>
           </div>
 
-          
           <div className="space-y-4">
             <h3 className="text-base font-semibold text-gray-900 border-b border-gray-200 pb-2 flex items-center">
               Account Information
@@ -185,73 +187,79 @@ const Card: React.FC<CardProps> = ({ account, onClose, onStatusUpdate }) => {
             </div>
           </div>
 
-        
-{(account.aadhaar_number || account.pan_number || account.aadhaar_file || account.pan_file) && (
-  <div className="space-y-4">
-    <h3 className="text-base font-semibold text-gray-900 border-b border-gray-200 pb-2">
-      Identity Information
-    </h3>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {account.aadhaar_number && (
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Aadhaar Number
-          </label>
-          <div className="px-4 py-2 rounded-md bg-gray-50 border border-gray-200 font-mono break-words">
-            {account.aadhaar_number}
-          </div>
-        </div>
-      )}
-      {account.pan_number && (
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            PAN Number
-          </label>
-          <div className="px-4 py-2 rounded-md bg-gray-50 border border-gray-200 font-mono break-words">
-            {account.pan_number}
-          </div>
-        </div>
-      )}
-      {account.aadhaar_file && (
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Aadhaar File
-          </label>
-          <div className="px-4 py-2 rounded-md bg-gray-50 border border-gray-200 break-words">
-            <a
-              href={`http://localhost:4000/${account.aadhaar_file.replace(/\\/g, "/")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 underline"
-            >
-              View Aadhaar File
-            </a>
-          </div>
-        </div>
-      )}
-      {account.pan_file && (
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            PAN File
-          </label>
-          <div className="px-4 py-2 rounded-md bg-gray-50 border border-gray-200 break-words">
-            <a
-              href={`http://localhost:4000/${account.pan_file.replace(/\\/g, "/")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 underline"
-            >
-              View PAN File
-            </a>
-          </div>
-        </div>
-      )}
-    </div>
-  </div>
-)}
+          {(account.aadhaar_number ||
+            account.pan_number ||
+            account.aadhaar_file ||
+            account.pan_file) && (
+            <div className="space-y-4">
+              <h3 className="text-base font-semibold text-gray-900 border-b border-gray-200 pb-2">
+                Identity Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {account.aadhaar_number && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Aadhaar Number
+                    </label>
+                    <div className="px-4 py-2 rounded-md bg-gray-50 border border-gray-200 font-mono break-words">
+                      {account.aadhaar_number}
+                    </div>
+                  </div>
+                )}
+                {account.pan_number && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      PAN Number
+                    </label>
+                    <div className="px-4 py-2 rounded-md bg-gray-50 border border-gray-200 font-mono break-words">
+                      {account.pan_number}
+                    </div>
+                  </div>
+                )}
+                {account.aadhaar_file && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Aadhaar File
+                    </label>
+                    <div className="px-4 py-2 rounded-md bg-gray-50 border border-gray-200 break-words">
+                      <a
+                        href={`http://localhost:4000/${account.aadhaar_file.replace(
+                          /\\/g,
+                          "/"
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 underline"
+                      >
+                        View Aadhaar File
+                      </a>
+                    </div>
+                  </div>
+                )}
+                {account.pan_file && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      PAN File
+                    </label>
+                    <div className="px-4 py-2 rounded-md bg-gray-50 border border-gray-200 break-words">
+                      <a
+                        href={`http://localhost:4000/${account.pan_file.replace(
+                          /\\/g,
+                          "/"
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 underline"
+                      >
+                        View PAN File
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
-
-         
           <div className="space-y-4">
             <h3 className="text-base font-semibold text-gray-900 border-b border-gray-200 pb-2 flex items-center">
               Nominee Information
@@ -277,8 +285,9 @@ const Card: React.FC<CardProps> = ({ account, onClose, onStatusUpdate }) => {
           </div>
         </div>
 
-        
-        {["pending", "approved", "rejected"].includes(account.status?.trim().toLowerCase()) && (
+        {["pending", "approved", "rejected"].includes(
+          account.status?.trim().toLowerCase()
+        ) && (
           <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
             <div className="flex justify-center gap-4">
               <Button
@@ -286,7 +295,6 @@ const Card: React.FC<CardProps> = ({ account, onClose, onStatusUpdate }) => {
                 onClick={handleApprove}
                 className="flex items-center space-x-2 px-5 py-2   bg-[#004466] hover:bg-[#8bdea3]"
               >
-               
                 <span>Approve</span>
               </Button>
               <Button
@@ -294,7 +302,6 @@ const Card: React.FC<CardProps> = ({ account, onClose, onStatusUpdate }) => {
                 onClick={handleReject}
                 className="flex items-center space-x-2 px-8 py-2"
               >
-                
                 <span>Reject</span>
               </Button>
             </div>
