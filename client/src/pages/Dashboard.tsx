@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SummaryCard from "../components/Dashboard/SummaryCard";
 import Section from "../components/Dashboard/Section";
-import Info from "../components/Dashboard/Info";
 import { getDashboardData } from "../api/dashboardApi";
 import { useNavigate } from "react-router-dom";
 
@@ -27,6 +26,38 @@ const Dashboard: React.FC = () => {
 
     fetchData();
   }, []);
+
+  const formatCurrency = (amount: number) =>
+    `₹${amount.toLocaleString("en-IN")}`;
+
+  const formatDate = (date: string) =>
+    new Date(date).toLocaleString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+  const getStatusBadge = (status: string) => {
+    if (status === "approved")
+      return (
+        <span className="text-green-700 bg-green-100 px-2 py-1 rounded-full">
+          {status}
+        </span>
+      );
+    if (status === "pending")
+      return (
+        <span className="text-yellow-700 bg-yellow-100 px-4 pb-1 rounded-full">
+          {status}
+        </span>
+      );
+    return (
+      <span className="text-red-700 bg-red-100 px-2 py-1 rounded-full">
+        {status}
+      </span>
+    );
+  };
 
   if (error) {
     return (
@@ -63,45 +94,122 @@ const Dashboard: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-10 bg-[#004466] text-white p-6 rounded-lg shadow-md">
           <h1 className="text-4xl font-bold">Welcome, {user.full_name} 👋</h1>
-          <p className="mt-2">Here's a summary of your account information.</p>
+          <p className="mt-2 text-sm">
+            Here’s a summary of your account and details.
+          </p>
         </div>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           <SummaryCard title="Account Number" value={user.account_number} />
-          <SummaryCard title="Balance" value={`₹${user.balance}`} />
-          <SummaryCard title="Status" value={user.status} />
+          <SummaryCard title="Balance" value={formatCurrency(user.balance)} />
+          <SummaryCard title="Status" value={getStatusBadge(user.status)} />
           <SummaryCard title="Account Type" value={user.account_type} />
         </div>
 
-        {/* Detail Sections */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Section title="Personal Information">
-            <Info label="Email" value={user.email} />
-            <Info label="Phone Number" value={user.phone_number} />
-            <Info label="Address" value={user.address} />
-          </Section>
+        {/* Personal Details */}
+        <Section title="Personal Information">
+          <table className="w-full table-auto text-sm">
+            <thead>
+              <tr className="bg-gray-100 text-left">
+                <th className="p-2 w-1/3">Field</th>
+                <th className="p-2 w-2/3">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b">
+                <td className="p-2 font-semibold align-top">Email</td>
+                <td className="p-2 align-top">{user.email}</td>
+              </tr>
+              <tr className="border-b">
+                <td className="p-2 font-semibold align-top">Phone Number</td>
+                <td className="p-2 align-top">{user.phone_number}</td>
+              </tr>
+              <tr>
+                <td className="p-2 font-semibold align-top">Address</td>
+                <td className="p-2 align-top">{user.address}</td>
+              </tr>
+            </tbody>
+          </table>
+        </Section>
 
-          <Section title="Account Information">
-            <Info label="Account Type" value={user.account_type} />
-            <Info label="Account Number" value={user.account_number} />
-            <Info label="Status" value={user.status} />
-            <Info label="Balance" value={`₹${user.balance}`} />
-          </Section>
+        {/* Account Info */}
+        <Section title="Account Information">
+          <table className="w-full table-auto text-sm">
+            <thead>
+              <tr className="bg-gray-100 text-left">
+                <th className="p-2 w-1/3">Field</th>
+                <th className="p-2 w-2/3">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b">
+                <td className="p-2 font-semibold align-top">Account Type</td>
+                <td className="p-2 align-top">{user.account_type}</td>
+              </tr>
+              <tr className="border-b">
+                <td className="p-2 font-semibold align-top">Account Number</td>
+                <td className="p-2 align-top">{user.account_number}</td>
+              </tr>
+              <tr className="border-b">
+                <td className="p-2 font-semibold align-top">Status</td>
+                <td className="p-2 align-top">{getStatusBadge(user.status)}</td>
+              </tr>
+              <tr>
+                <td className="p-2 font-semibold align-top">Balance</td>
+                <td className="p-2 align-top">
+                  {formatCurrency(user.balance)}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </Section>
 
-          <Section title="KYC Details">
-            <Info label="Aadhaar Number" value={user.aadhaar_number} />
-            <Info label="PAN Number" value={user.pan_number} />
-            <Info
-              label="Submitted On"
-              value={new Date(user.submitted_at).toLocaleString()}
-            />
-          </Section>
+        {/* KYC Info */}
+        <Section title="KYC Details">
+          <table className="w-full table-auto text-sm">
+            <thead>
+              <tr className="bg-gray-100 text-left">
+                <th className="p-2 w-1/3">Field</th>
+                <th className="p-2 w-2/3">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b">
+                <td className="p-2 font-semibold align-top">Aadhaar Number</td>
+                <td className="p-2 align-top">{user.aadhaar_number}</td>
+              </tr>
+              <tr className="border-b">
+                <td className="p-2 font-semibold align-top">PAN Number</td>
+                <td className="p-2 align-top">{user.pan_number}</td>
+              </tr>
+              <tr>
+                <td className="p-2 font-semibold align-top">Submitted On</td>
+                <td className="p-2 align-top">
+                  {formatDate(user.submitted_at)}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </Section>
 
-          <Section title="Nominee Information">
-            <Info label="Relationship" value={user.nominee_relationship} />
-          </Section>
-        </div>
+        {/* Nominee Info */}
+        <Section title="Nominee Information">
+          <table className="w-full table-auto text-sm">
+            <thead>
+              <tr className="bg-gray-100 text-left">
+                <th className="p-2 w-1/3">Field</th>
+                <th className="p-2 w-2/3">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="p-2 font-semibold align-top">Relationship</td>
+                <td className="p-2 align-top">{user.nominee_relationship}</td>
+              </tr>
+            </tbody>
+          </table>
+        </Section>
       </div>
     </div>
   );
