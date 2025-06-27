@@ -6,10 +6,12 @@ import {
   RejectAccount,
 } from "../api/adminAccountsApi";
 import { toast } from "react-toastify";
+import Card from "../components/Card";
 
 const AllAccounts: React.FC = () => {
   const [accounts, setAccounts] = useState<any[]>([]);
   const [statuses, setStatuses] = useState<string[]>([]);
+  const [selectedAccount, setSelectedAccount] = useState<any | null>(null);
 
   const statusOptions = [
     { value: "pending", label: "Pending" },
@@ -56,7 +58,6 @@ const AllAccounts: React.FC = () => {
       setAccounts(updatedAccounts);
     } catch (error: any) {
       console.error("Status update error:", error);
-
       if (error.response?.data?.message) {
         toast.error(error.response.data.message);
       } else {
@@ -89,7 +90,11 @@ const AllAccounts: React.FC = () => {
                 </thead>
                 <tbody>
                   {accounts.map((account, index) => (
-                    <tr key={index} className="border-t">
+                    <tr
+                      key={index}
+                      className="border-t cursor-pointer hover:bg-gray-50"
+                      onClick={() => setSelectedAccount(account)}
+                    >
                       <td className="px-4 py-2">{account.full_name}</td>
                       <td className="px-4 py-2">{account.phone_number}</td>
                       <td className="px-4 py-2">{account.email || "N/A"}</td>
@@ -119,6 +124,27 @@ const AllAccounts: React.FC = () => {
               </table>
             </div>
           </div>
+
+          {selectedAccount && (
+            <Card
+              account={selectedAccount}
+              onClose={() => setSelectedAccount(null)}
+              onStatusUpdate={(newStatus: string) => {
+                const updated = [...accounts];
+                const idx = updated.findIndex(
+                  (acc) => acc.account_uuid === selectedAccount.account_uuid
+                );
+                if (idx !== -1) {
+                  updated[idx].status = newStatus;
+                  setAccounts(updated);
+
+                  const updatedStatuses = [...statuses];
+                  updatedStatuses[idx] = newStatus;
+                  setStatuses(updatedStatuses);
+                }
+              }}
+            />
+          )}
         </div>
       </div>
     </div>
