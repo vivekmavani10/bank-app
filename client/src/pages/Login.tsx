@@ -27,19 +27,21 @@ const Login: React.FC = () => {
     }
 
     try {
-      const { token, message, data } = await loginUser({
+      const response = await loginUser({
         phone_number: phone,
         password,
       });
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(data));
+      const token = response.token;
+      const user = response.data;
+      const message = response.message;
 
-      // Decode the token to get role
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
       const decoded: any = jwtDecode(token);
       const role = decoded?.role;
 
-      // Redirect based on role
       if (role === "admin") {
         navigate("/admin-dashboard");
       } else {
@@ -49,11 +51,7 @@ const Login: React.FC = () => {
       console.log("Login successful:", message);
     } catch (error: any) {
       console.error("Login error:", error);
-      if (error.response?.data?.message) {
-        setError(error.response.data.message);
-      } else {
-        setError("Something went wrong. Please try again.");
-      }
+      setError(error.message || "Something went wrong. Please try again.");
     }
   };
 

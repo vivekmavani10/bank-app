@@ -14,11 +14,43 @@ interface RegisterPayload {
 }
 
 export const loginUser = async (payload: LoginPayload) => {
-  const response = await axiosInstance.post("/login", payload);
-  return response.data;
+  try {
+    const { data } = await axiosInstance.post("/login", payload);
+
+    if (data?.status === "success" && data?.data?.token) {
+      return {
+        token: data.data.token,
+        message: data.message,
+        data: data.data.user,
+      };
+    } else {
+      throw new Error(data?.message || "Login failed");
+    }
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message ||
+        error.message ||
+        "Something went wrong during login"
+    );
+  }
 };
 
-export const registerUser = async (payload: RegisterPayload) => {
-  const response = await axiosInstance.post("/register", payload);
-  return response.data;
+export const registerUser = async (
+  payload: RegisterPayload
+): Promise<{ message: string }> => {
+  try {
+    const { data } = await axiosInstance.post("/register", payload);
+
+    if (data?.status === "success") {
+      return { message: data.message };
+    } else {
+      throw new Error(data?.message || "Registration failed");
+    }
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message ||
+        error.message ||
+        "Something went wrong during registration"
+    );
+  }
 };

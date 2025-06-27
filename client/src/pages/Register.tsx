@@ -39,23 +39,19 @@ const Register: React.FC = () => {
     }
 
     try {
-      const { data, message } = await registerUser({
+      const { message } = await registerUser({
         full_name: name,
         email: email,
         phone_number: phone,
         password: password,
         confirm_password: confirmPassword,
       });
-      localStorage.setItem("user", JSON.stringify(data));
-      console.log("Registration successful! ", message);
+
+      console.log("Registration successful:", message);
       navigate("/login");
     } catch (error: any) {
-      console.error("registration error:", error);
-      if (error.response?.data?.message) {
-        setError(error.response.data.message);
-      } else {
-        setError("Something went wrong. Please try again.");
-      }
+      console.error("Registration error:", error);
+      setError(error.message || "Something went wrong. Please try again.");
     }
   };
 
@@ -114,7 +110,9 @@ const Register: React.FC = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm your password"
           />
-          <Button type="submit" className="w-full">Register</Button>
+          <Button type="submit" className="w-full">
+            Register
+          </Button>
         </form>
         <p className="text-sm text-gray-600 mt-4 text-center">
           Already have an account?{" "}

@@ -11,12 +11,6 @@ interface AllAccounts {
   account_uuid: string;
 }
 
-interface AccountsResponse {
-  status: string;
-  message: string;
-  data: AllAccounts[]; 
-}
-
 // Fetch all accounts
 export const FetchAllAccounts = async (): Promise<AllAccounts[]> => {
   const response = await axiosInstance.get("/accounts");

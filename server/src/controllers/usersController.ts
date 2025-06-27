@@ -19,48 +19,55 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       !password ||
       !confirm_password
     ) {
-      res.status(400).json({ message: "All fields are required" });
-      return;
-    }
-
-    if (phone_number.length !== 10 || !/^\d+$/.test(phone_number)) {
-      res.status(400).json({ message: "Phone number must be 10 digits long" });
-      return;
-    }
-    const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailValidation.test(email)) {
-      res.status(400).json({ message: "Invalid email format" });
-      return;
-    }
-
-    const phonevalidation = /^\d{10}$/;
-    if (!phonevalidation.test(phone_number)) {
       res
         .status(400)
-        .json({ message: "Phone number must be exactly 10 digits" });
+        .json({ status: "error", message: "All fields are required" });
+      return;
+    }
+
+    const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneValidation = /^\d{10}$/;
+
+    if (!phoneValidation.test(phone_number)) {
+      res.status(400).json({
+        status: "error",
+        message: "Phone number must be exactly 10 digits",
+      });
+      return;
+    }
+
+    if (!emailValidation.test(email)) {
+      res
+        .status(400)
+        .json({ status: "error", message: "Invalid email format" });
       return;
     }
 
     if (password.length !== 6) {
-      res
-        .status(400)
-        .json({ message: "Password must be exactly 6 characters long" });
+      res.status(400).json({
+        status: "error",
+        message: "Password must be exactly 6 characters long",
+      });
       return;
     }
 
     if (password !== confirm_password) {
-      res.status(400).json({ message: "Passwords do not match" });
+      res
+        .status(400)
+        .json({ status: "error", message: "Passwords do not match" });
       return;
     }
 
     const existingUser = await usersModel.findUserByPhone(phone_number);
     if (existingUser) {
-      res.status(409).json({ message: "This mobile number already exists" });
+      res.status(409).json({
+        status: "error",
+        message: "This mobile number already exists",
+      });
       return;
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const newUser = {
       user_uuid: uuidv4(),
       full_name,
@@ -72,12 +79,14 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
     const userId = await usersModel.createUser(newUser);
 
-    res
-      .status(201)
-      .json({ message: "User registered successfully", user_id: userId });
+    res.status(201).json({
+      status: "success",
+      message: "User registered successfully",
+      data: { user_id: userId },
+    });
   } catch (error) {
     console.error("Error registering user:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ status: "error", message: "Internal server error" });
   }
 };
 
@@ -88,26 +97,30 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const jwtSecret = process.env.JWT_SECRET as string;
 
     if (!phone_number || !password) {
-      res
-        .status(400)
-        .json({ message: "Phone number and password are required" });
+      res.status(400).json({
+        status: "error",
+        message: "Phone number and password are required",
+      });
       return;
     }
 
-    if (phone_number.length !== 10 || !/^\d+$/.test(phone_number)) {
-      res.status(400).json({ message: "Phone number must be 10 digits long" });
+    if (!/^\d{10}$/.test(phone_number)) {
+      res.status(400).json({
+        status: "error",
+        message: "Phone number must be 10 digits long",
+      });
       return;
     }
 
     const user = await usersModel.findUserByPhone(phone_number);
     if (!user) {
-      res.status(404).json({ message: "Register first!" });
+      res.status(404).json({ status: "error", message: "Register first!" });
       return;
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
     if (!isPasswordValid) {
-      res.status(401).json({ message: "Invalid password" });
+      res.status(401).json({ status: "error", message: "Invalid password" });
       return;
     }
 
@@ -115,18 +128,23 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const payload = {
       user_uuid: user.user_uuid,
       user_id: user.user_id,
-      role: user.role
+      role: user.role,
     };
 
-    const token = jwt.sign(
-      payload,
-      jwtSecret,
-      { expiresIn: process.env.JWT_EXPIRES_IN } as jwt.SignOptions
-    );
+    const token = jwt.sign(payload, jwtSecret, {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    } as jwt.SignOptions);
 
-    res.status(200).json({ message: "Login successful", token, data: user });
+    res.status(200).json({
+      status: "success",
+      message: "Login successful",
+      data: {
+        token,
+        user,
+      },
+    });
   } catch (error) {
     console.error("Error logging in user:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ status: "error", message: "Internal server error" });
   }
 };
