@@ -1,7 +1,7 @@
 import React from "react";
 import { X } from "lucide-react";
 import Button from "./Button";
-import { ApproveAccount, RejectAccount } from "../api/adminAccountsApi";
+import { ApproveAccount, RejectAccount } from "../api/AdminAccountsApi";
 import { toast } from "react-toastify";
 
 interface CardProps {

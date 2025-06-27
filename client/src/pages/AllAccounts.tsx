@@ -4,7 +4,7 @@ import {
   FetchAllAccounts,
   ApproveAccount,
   RejectAccount,
-} from "../api/adminAccountsApi";
+} from "../api/AdminAccountsApi";
 import { toast } from "react-toastify";
 import Card from "../components/Card";
 
