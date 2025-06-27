@@ -15,12 +15,7 @@ const Dashboard: React.FC = () => {
         const data = await getDashboardData();
         setUser(data);
       } catch (err: any) {
-        console.error("Dashboard fetch error:", err);
-        if (err.response?.data?.message) {
-          setError(err.response.data.message);
-        } else {
-          setError("Something went wrong. Please try again.");
-        }
+        setError(err.message); 
       }
     };
 

@@ -5,7 +5,11 @@ import { v4 as uuidv4 } from "uuid";
 
 const accountModel = new AccountModel(dbPool);
 
-export const createAccount = async (req: Request, res: Response): Promise<void> => {
+// Create Account
+export const createAccount = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const {
       account_type,
@@ -22,10 +26,11 @@ export const createAccount = async (req: Request, res: Response): Promise<void> 
     const aadhar_file = (req.files as any)?.aadhar_file?.[0]?.path;
     const pan_file = (req.files as any)?.pan_file?.[0]?.path;
 
+    // Validate required fields
     if (
       !account_type ||
       !balance ||
-      !aadhar_number || 
+      !aadhar_number ||
       !aadhar_file ||
       !pan_number ||
       !pan_file ||
@@ -33,27 +38,39 @@ export const createAccount = async (req: Request, res: Response): Promise<void> 
       !nominee_relationship ||
       !address
     ) {
-      res.status(400).json({ message: "All fields are required" });
+      res
+        .status(400)
+        .json({ status: "error", message: "All fields are required" });
       return;
     }
 
     if (aadhar_number.length !== 12 || !/^\d+$/.test(aadhar_number)) {
-      res.status(400).json({ message: "Aadhar number must be 12 digits long" });
+      res
+        .status(400)
+        .json({
+          status: "error",
+          message: "Aadhaar number must be exactly 12 digits",
+        });
       return;
     }
 
     const existingAccount = await accountModel.findAccountByUserId(user_id);
 
     if (existingAccount) {
-      res.status(409).json({ message: "You already have an account in this bank" });
+      res
+        .status(409)
+        .json({
+          status: "error",
+          message: "You already have an account in this bank",
+        });
       return;
     }
 
     const account_number = accountModel.generateAccountNumber();
-    const account_uuid = uuidv4(); 
+    const account_uuid = uuidv4();
 
     await accountModel.createAccount({
-       account_uuid,
+      account_uuid,
       account_number,
       user_id,
       account_type,
@@ -72,36 +89,59 @@ export const createAccount = async (req: Request, res: Response): Promise<void> 
 
     await accountModel.updateAddress(user_id, address);
 
-    res.status(201).json({ message: "Account application submitted successfully" , account_uuid,});
+    res.status(201).json({
+      status: "success",
+      message: "Account application submitted successfully",
+      account_uuid,
+    });
   } catch (error) {
     console.error("Error creating account:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res
+      .status(500)
+      .json({
+        status: "error",
+        message: "Failed to submit account application",
+      });
   }
 };
 
-
-// Get logged in user's account details
-export const getAccountDetails = async (req: Request, res: Response): Promise<void> => {
+// Get Logged-in User's Account Details
+export const getAccountDetails = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const user_id = (req as any).user?.user_id;
 
     if (!user_id) {
-      res.status(401).json({ message: "Unauthorized" });
+      res
+        .status(401)
+        .json({ status: "error", message: "Unauthorized: User not logged in" });
       return;
     }
 
-    const account = await accountModel.getAccountDetailsByUserId(user_id);
-    
+    const [rows]: any = await accountModel.getAccountDetails(user_id);
 
-    // If user exists but no account_id and no kyc_id, prompt to create account
-    if (!account.user_id && !account.user_id) {
-      res.status(403).json({ message: "You need to create account" });
+    if (!rows || rows.length === 0) {
+      res.status(404).json({
+        status: "error",
+        message: "You don't have an account yet. Please apply for one.",
+      });
       return;
     }
+    const accountDetails = await accountModel.getAccountDetailsByUserId(
+      user_id
+    );
 
-    res.status(200).json(account);
+    res.status(200).json({
+      status: "success",
+      message: "Account details fetched successfully",
+      data: accountDetails,
+    });
   } catch (error) {
     console.error("Error fetching account details:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res
+      .status(500)
+      .json({ status: "error", message: "Failed to fetch account details" });
   }
 };
