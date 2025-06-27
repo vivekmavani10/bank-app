@@ -22,10 +22,17 @@ const AllAccounts: React.FC = () => {
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const response = await FetchAllAccounts();
-        setAccounts(response.accounts);
-        setStatuses(response.accounts.map((acc: any) => acc.status || ""));
-      } catch (error) {
+        const accountsList = await FetchAllAccounts();
+        if (Array.isArray(accountsList)) {
+          setAccounts(accountsList);
+          setStatuses(accountsList.map((acc: any) => acc.status || ""));
+        } else {
+          setAccounts([]);
+          setStatuses([]);
+          toast.info("No accounts found.");
+        }
+      } catch (error: any) {
+        toast.error(error.message || "Failed to load accounts");
         console.error("Error fetching accounts:", error);
       }
     };
@@ -39,14 +46,14 @@ const AllAccounts: React.FC = () => {
     accountUuid: string
   ) => {
     try {
-      if (newStatus === "approved") {
-        await ApproveAccount(accountUuid);
-        toast.success("Account approved successfully!");
-      }
+      let message = "";
 
-      if (newStatus === "rejected") {
-        await RejectAccount(accountUuid);
-        toast.success("Account rejected successfully!");
+      if (newStatus === "approved") {
+        message = await ApproveAccount(accountUuid);
+        toast.success(message);
+      } else if (newStatus === "rejected") {
+        message = await RejectAccount(accountUuid);
+        toast.success(message);
       }
 
       const updatedStatuses = [...statuses];
@@ -58,11 +65,7 @@ const AllAccounts: React.FC = () => {
       setAccounts(updatedAccounts);
     } catch (error: any) {
       console.error("Status update error:", error);
-      if (error.response?.data?.message) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("Something went wrong. Please try again.");
-      }
+      toast.error(error.message || "Something went wrong. Please try again.");
     }
   };
 

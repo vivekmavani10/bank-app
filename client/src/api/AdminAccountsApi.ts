@@ -8,25 +8,42 @@ interface AllAccounts {
   account_type: string;
   balance: number;
   status: string;
-  account_uuid: string; 
+  account_uuid: string;
 }
 
 interface AccountsResponse {
-  accounts: AllAccounts[];
+  status: string;
+  message: string;
+  data: AllAccounts[]; 
 }
 
 // Fetch all accounts
-export const FetchAllAccounts = async (): Promise<AccountsResponse> => {
-  const response = await axiosInstance.get<AccountsResponse>("/accounts");
-  return response.data;
+export const FetchAllAccounts = async (): Promise<AllAccounts[]> => {
+  const response = await axiosInstance.get("/accounts");
+
+  if (response.data.status === "success") {
+    return response.data.data;
+  } else {
+    throw new Error(response.data.message || "Failed to fetch accounts");
+  }
 };
 
 // Approve account
-export const ApproveAccount = async (accountUuid: string): Promise<void> => {
-  await axiosInstance.put(`/account/approve/${accountUuid}`);
+export const ApproveAccount = async (accountUuid: string): Promise<string> => {
+  const response = await axiosInstance.put(`/account/approve/${accountUuid}`);
+  if (response.data.status === "success") {
+    return response.data.message;
+  } else {
+    throw new Error(response.data.message || "Failed to approve account");
+  }
 };
 
 // Reject account
-export const RejectAccount = async (accountUuid: string): Promise<void> => {
-  await axiosInstance.put(`/account/reject/${accountUuid}`);
+export const RejectAccount = async (accountUuid: string): Promise<string> => {
+  const response = await axiosInstance.put(`/account/reject/${accountUuid}`);
+  if (response.data.status === "success") {
+    return response.data.message;
+  } else {
+    throw new Error(response.data.message || "Failed to reject account");
+  }
 };
