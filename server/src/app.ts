@@ -7,6 +7,7 @@ import usersRoutes from './routes/usersRoutes';
 import accountRoutes from './routes/accountRoutes';
 import adminAccountRoutes from './routes/adminAccountRoutes';
 import dashboardRoutes from './routes/dashboardRoutes';
+import transactionRouter from './routes/transactionsRoutes';
 
 dotenv.config();
 
@@ -20,7 +21,9 @@ app.use('/api',
   usersRoutes,
   accountRoutes,
   adminAccountRoutes,
-  dashboardRoutes
+  dashboardRoutes,
+  transactionRouter
+
 );
 
 export default app;

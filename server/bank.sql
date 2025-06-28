@@ -38,14 +38,14 @@ CREATE TABLE kyc_documents (
 -- 4. Transactions
 CREATE TABLE transactions (
   transaction_id INT AUTO_INCREMENT PRIMARY KEY,
-  from_account_id INT,
-  to_account_id INT,
+  sender_account INT,
+  receiver_account INT,
   amount DECIMAL(12,2),
   transaction_type ENUM('credit', 'debit'),
   status ENUM('success', 'failed') DEFAULT 'success',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (from_account_id) REFERENCES accounts(account_id),
-  FOREIGN KEY (to_account_id) REFERENCES accounts(account_id)
+  FOREIGN KEY (sender_account) REFERENCES accounts(account_id),
+  FOREIGN KEY (receiver_account) REFERENCES accounts(account_id)
 );
 
 -- 5. Notifications (optional)
