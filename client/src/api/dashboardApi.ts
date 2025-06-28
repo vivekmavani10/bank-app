@@ -14,3 +14,18 @@ export const getDashboardData = async () => {
     );
   }
 };
+
+export const getAdminDashboardData = async () => {
+  try {
+    const { data } = await axiosInstance.get("/admin-dashboard")
+    if (data?.status === "success") {
+      return data.data
+    } else {
+      throw new Error(data?.message)
+    }
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message || error.message
+    )
+  }
+}
