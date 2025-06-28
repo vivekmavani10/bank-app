@@ -56,6 +56,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           >
             Apply For KYC
           </Link> */}
+          <Link
+            to="/dashboard/transaction"
+            onClick={onClose}
+            className="hover:bg-[#d7555e] text-[#004466] hover:text-white rounded-md px-3 py-2 transition"
+          >
+            Transaction
+          </Link>
         </div>
       </div>
     </>

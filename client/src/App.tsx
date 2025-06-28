@@ -16,6 +16,7 @@ import ApplyAccount from "./pages/ApplyAccount";
 import AdminDashboardLayout from "./layouts/AdminDashbaordLayout";
 import AdminDashboard from "./pages/AdminDashboard";
 import AllAccounts from "./pages/AllAccounts";
+import Transaction from "./pages/Transaction";
 
 const App: React.FC = () => {
   return (
@@ -89,6 +90,7 @@ const App: React.FC = () => {
         >
           <Route index element={<Dashboard />} />
           <Route path="apply-account" element={<ApplyAccount />} />
+          <Route path="transaction" element={<Transaction />} />
         </Route>
 
         {/* Admin Dashboard Routes */}
