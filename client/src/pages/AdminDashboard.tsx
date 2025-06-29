@@ -117,7 +117,7 @@ const AdminDashboard: React.FC = () => {
               </thead>
               <tbody>
                 {dashboardData.recentAccountApplications?.map((app: any) => (
-                  <tr key={app.account_id} className="border-b">
+                  <tr key={app.account_id} className="border-b hover:bg-gray-100">
                     <td className="p-2">{app.full_name}</td>
                     <td className="p-2 capitalize">{app.account_type}</td>
                     <td className="p-2">{getStatusBadge(app.status)}</td>
@@ -184,7 +184,7 @@ const AdminDashboard: React.FC = () => {
               </thead>
               <tbody>
                 {dashboardData.recentTransactions?.map((txn: any) => (
-                  <tr key={txn.transaction_id} className="border-b">
+                  <tr key={txn.transaction_id} className="border-b hover:bg-gray-100">
                     <td className="p-2">{txn.sender_account || "-"}</td>
                     <td className="p-2">{txn.receiver_account || "-"}</td>
                     <td className="p-2">{formatCurrency(txn.amount)}</td>
@@ -232,7 +232,7 @@ const AdminDashboard: React.FC = () => {
             className="text-black text-center mt-3 cursor-pointer underline"
             onClick={() => navigate("/admin-dashboard/transactions")}
           >
-            View All Applications
+            View All Transactions
           </div>
         </Section>
       </div>
