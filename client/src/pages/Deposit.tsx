@@ -2,26 +2,27 @@ import React, { useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import Popup from "../components/Popup";
+import { depositMoney } from "../api/transactionsApi";
 
 const Deposit: React.FC = () => {
-  const [accountNumber, setAccountNumber] = useState("");
-  const [amount, setAmount] = useState("");
+  const [account_number, setAccountNumber] = useState("");
+  const [balance, setBalance] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [showPopup, setShowPopup] = useState(false);
 
   const validateForm = (): boolean => {
-    if (!accountNumber || !amount) {
+    if (!account_number || !balance) {
       setError("Please fill in all fields.");
       return false;
     }
 
-    if (isNaN(Number(accountNumber)) || accountNumber.length !== 12) {
+    if (isNaN(Number(account_number)) || account_number.length !== 12) {
       setError("Please enter a valid 12-digit account number.");
       return false;
     }
 
-    if (isNaN(Number(amount)) || Number(amount) <= 0) {
+    if (isNaN(Number(balance)) || Number(balance) <= 0) {
       setError("Please enter a valid amount.");
       return false;
     }
@@ -37,17 +38,17 @@ const Deposit: React.FC = () => {
     }
   };
 
-  const handleConfirmDeposit = () => {
-    console.log("Deposit details:", {
-      accountNumber,
-      amount,
+  const handleConfirmDeposit = async () => {
+    const payload = {
+      account_number,
+      balance: Number(balance),
       description,
-    });
+    };
 
-    alert("Deposit successful!");
+    await depositMoney(payload);
 
     setAccountNumber("");
-    setAmount("");
+    setBalance("");
     setDescription("");
     setShowPopup(false);
   };
@@ -68,8 +69,8 @@ const Deposit: React.FC = () => {
             <Input
               label="Account Number"
               type="text"
-              name="accountNumber"
-              value={accountNumber}
+              name="account_number"
+              value={account_number}
               onChange={(e) => {
                 const value = e.target.value;
                 if (/^\d{0,12}$/.test(value)) {
@@ -82,9 +83,9 @@ const Deposit: React.FC = () => {
             <Input
               label="Amount (₹)"
               type="number"
-              name="amount"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              name="balance"
+              value={balance}
+              onChange={(e) => setBalance(e.target.value)}
               placeholder="Enter deposit amount"
             />
 
@@ -107,7 +108,7 @@ const Deposit: React.FC = () => {
       {showPopup && (
         <Popup
           title="Confirm Deposit"
-          message={`Are you sure you want to deposit ₹${amount} into A/C ${accountNumber}?`}
+          message={`Are you sure you want to deposit ₹${balance} into A/C ${account_number}?`}
           onConfirm={handleConfirmDeposit}
           onCancel={() => setShowPopup(false)}
         />

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { TransactionModel } from "../models/transactionsModels";
 import { dbPool } from "../config/db";
 import { v4 as uuidv4 } from "uuid";
+import { stat } from "fs";
 
 const transactionModel = new TransactionModel(dbPool);
 
@@ -14,22 +15,18 @@ export const transferMoney = async (
     const { receiver_account, amount, description } = req.body;
 
     if (!receiver_account || !amount) {
-      res
-        .status(400)
-        .json({
-          status: "error",
-          message: "Missing required fields receiver account and amount",
-        });
+      res.status(400).json({
+        status: "error",
+        message: "Missing required fields receiver account and amount",
+      });
       return;
     }
 
     if (!/^\d{12}$/.test(receiver_account)) {
-      res
-        .status(400)
-        .json({
-          status: "error",
-          message: "Invalid account number format Must be 12 digits",
-        });
+      res.status(400).json({
+        status: "error",
+        message: "Invalid account number format Must be 12 digits",
+      });
       return;
     }
 
@@ -42,22 +39,18 @@ export const transferMoney = async (
     }
 
     if (senderAccount.account_number === receiver_account) {
-      res
-        .status(400)
-        .json({
-          status: "error",
-          message: "Cannot transfer to your own account",
-        });
+      res.status(400).json({
+        status: "error",
+        message: "Cannot transfer to your own account",
+      });
       return;
     }
 
     if (senderAccount.status !== "approved") {
-      res
-        .status(403)
-        .json({
-          status: "error",
-          message: "Sender account is not approved for transactions",
-        });
+      res.status(403).json({
+        status: "error",
+        message: "Sender account is not approved for transactions",
+      });
       return;
     }
 
@@ -90,12 +83,10 @@ export const transferMoney = async (
         description: "Receiver account is not approved",
         transaction_uuid: uuidv4(),
       });
-      res
-        .status(403)
-        .json({
-          status: "error",
-          message: "Receiver account is not approved for transactions",
-        });
+      res.status(403).json({
+        status: "error",
+        message: "Receiver account is not approved for transactions",
+      });
       return;
     }
 
@@ -144,5 +135,63 @@ export const transferMoney = async (
     });
   } catch (err) {
     res.status(500).json({ status: "error", message: "Transfer failed" });
+  }
+};
+
+export const depositMoney = async (req: Request, res: Response) => {
+  try {
+    const { account_number, balance, description } = req.body;
+
+    if (!account_number || !balance) {
+      res
+        .status(400)
+        .json({ status: "error", message: "All fields are required!" });
+      return;
+    }
+
+    if (!/^\d{12}$/.test(account_number)) {
+      res.status(400).json({
+        status: "error",
+        message: "Invalid account number format Must be 12 digits",
+      });
+      return;
+    }
+
+    const account = await transactionModel.findAccountByAccountNumber(
+      account_number
+    );
+
+    if (!account) {
+      res.status(404).json({ status: "error", message: "Account not found" });
+      return;
+    }
+
+    if (account.status !== "approved") {
+      res
+        .status(400)
+        .json({ status: "error", message: "Account was not approved!" });
+      return;
+    }
+
+    await transactionModel.depositInAccount(account_number, Number(balance));
+
+    await transactionModel.createTransaction({
+      sender_account: 0,
+      receiver_account: account.account_number,
+      amount: Number(balance),
+      transaction_type: "credit",
+      status: "success",
+      description: description || "Admin Deposit",
+      transaction_uuid: uuidv4(),
+    });
+
+    res.status(200).json({
+      status: "success",
+      message: "Amount deposited successfully",
+    });
+    return;
+  } catch (error) {
+    console.log("Error in deposit money: ", error);
+    res.status(500).json({ status: "error", message: "Internal Server Error" });
   }
 };

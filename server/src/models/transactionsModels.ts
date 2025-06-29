@@ -94,12 +94,21 @@ export class TransactionModel {
     return rows?.[0] || null;
   }
 
-async findAccountByUserId(user_id: number): Promise<any | null> {
-  const [rows]: any = await this.db.execute(
-    "SELECT * FROM accounts WHERE user_id = ?",
-    [user_id]
-  );
-  return rows?.[0] || null;
-}
+  async findAccountByUserId(user_id: number): Promise<any | null> {
+    const [rows]: any = await this.db.execute(
+      "SELECT * FROM accounts WHERE user_id = ?",
+      [user_id]
+    );
+    return rows?.[0] || null;
+  }
 
+  async depositInAccount(
+    account_number: string,
+    amount: number
+  ): Promise<void> {
+    await this.db.execute(
+      `UPDATE accounts SET balance = balance + ? WHERE account_number = ?`,
+      [amount, account_number]
+    );
+  }
 }
