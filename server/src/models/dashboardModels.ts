@@ -60,15 +60,15 @@ export class DashboardModel {
     const [rows]: any = await this.db.query(
       `SELECT 
        t.transaction_id,
-       from_acc.account_number AS from_account_number,
-       to_acc.account_number AS to_account_number,
+       from_acc.account_number AS sender_account,
+       to_acc.account_number AS receiver_account,
        t.amount,
        t.transaction_type,
        t.status,
        t.created_at
      FROM transactions t
-     LEFT JOIN accounts from_acc ON t.from_account_id = from_acc.account_id
-     LEFT JOIN accounts to_acc ON t.to_account_id = to_acc.account_id
+     LEFT JOIN accounts from_acc ON t.sender_account = from_acc.account_id
+     LEFT JOIN accounts to_acc ON t.receiver_account = to_acc.account_id
      ORDER BY t.created_at DESC
      LIMIT ?`,
       [limit]

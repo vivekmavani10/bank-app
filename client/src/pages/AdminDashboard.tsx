@@ -185,8 +185,8 @@ const AdminDashboard: React.FC = () => {
               <tbody>
                 {dashboardData.recentTransactions?.map((txn: any) => (
                   <tr key={txn.transaction_id} className="border-b">
-                    <td className="p-2">{txn.from_account_id || "-"}</td>
-                    <td className="p-2">{txn.to_account_id || "-"}</td>
+                    <td className="p-2">{txn.sender_account || "-"}</td>
+                    <td className="p-2">{txn.receiver_account || "-"}</td>
                     <td className="p-2">{formatCurrency(txn.amount)}</td>
                     <td className="p-2 capitalize">{txn.transaction_type}</td>
                     <td className="p-2">{formatDate(txn.created_at)}</td>
@@ -204,10 +204,10 @@ const AdminDashboard: React.FC = () => {
                 className="bg-white p-4 rounded-lg shadow-md border space-y-2"
               >
                 <p className="text-sm">
-                  <strong>From:</strong> {txn.from_account_id || "-"}
+                  <strong>From:</strong> {txn.sender_account || "-"}
                 </p>
                 <p className="text-sm">
-                  <strong>To:</strong> {txn.to_account_id || "-"}
+                  <strong>To:</strong> {txn.receiver_account || "-"}
                 </p>
                 <p className="text-sm">
                   <strong>Amount:</strong> {formatCurrency(txn.amount)}
