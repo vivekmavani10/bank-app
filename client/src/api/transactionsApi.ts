@@ -20,3 +20,32 @@ export const depositMoney = async (payload: DepositPayload) => {
     );
   }
 };
+
+export const transactionHistory = async () => {
+  try {
+    const { data } = await axiosInstance.get("/transactions")
+    if (data?.status === "success") {
+      return data.data;
+    } else {
+      throw new Error(data?.message || "Transaction History failded to load!");
+    }
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message || error.message || "Something went wrong"
+    )
+  }
+}
+
+export const downloadStatement = async (): Promise<Blob> => {
+  try {
+    const response = await axiosInstance.get("/statement", {
+      responseType: "blob",
+    });
+
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message || error.message || "Failed to download statement"
+    );
+  }
+};
