@@ -56,23 +56,28 @@ export class DashboardModel {
     return rows;
   }
 
-  async getRecentTransactions(limit: number = 10): Promise<any[]> {
-    const [rows]: any = await this.db.query(
-      `SELECT 
+async getRecentTransactions(limit: number = 10): Promise<any[]> {
+  const [rows]: any = await this.db.query(
+    `SELECT 
        t.transaction_id,
-       from_acc.account_number AS sender_account,
-       to_acc.account_number AS receiver_account,
+       t.sender_account AS sender_account,
+       t.receiver_account AS receiver_account,
        t.amount,
        t.transaction_type,
        t.status,
-       t.created_at
+       t.created_at,
+       from_acc.full_name AS sender_name,
+       to_acc.full_name AS receiver_name
      FROM transactions t
-     LEFT JOIN accounts from_acc ON t.sender_account = from_acc.account_id
-     LEFT JOIN accounts to_acc ON t.receiver_account = to_acc.account_id
+     LEFT JOIN accounts a1 ON t.sender_account = a1.account_number
+     LEFT JOIN users from_acc ON a1.user_id = from_acc.user_id
+     LEFT JOIN accounts a2 ON t.receiver_account = a2.account_number
+     LEFT JOIN users to_acc ON a2.user_id = to_acc.user_id
      ORDER BY t.created_at DESC
      LIMIT ?`,
-      [limit]
-    );
-    return rows;
-  }
+    [limit]
+  );
+  return rows;
+}
+  
 }

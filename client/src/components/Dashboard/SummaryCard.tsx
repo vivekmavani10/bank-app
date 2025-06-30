@@ -6,7 +6,7 @@ interface Props {
 }
 
 const SummaryCard: React.FC<Props> = ({ title, value }) => (
-  <div className="bg-white shadow rounded-lg p-5 text-center border-t-4 border-[#004466] hover:bg-gray-100">
+  <div className="bg-white rounded-lg p-5 text-center border-t-4 border-[#004466] shadow-sm hover:shadow-md transition-all duration-200">
     <p className="text-sm text-gray-600">{title}</p>
     <p className="text-xl font-bold text-[#004466] mt-1">{value}</p>
   </div>

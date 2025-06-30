@@ -3,6 +3,7 @@ import SummaryCard from "../components/Dashboard/SummaryCard";
 import Section from "../components/Dashboard/Section";
 import { getDashboardData } from "../api/dashboardApi";
 import { useNavigate } from "react-router-dom";
+import Button from "../components/Button";
 
 const Dashboard: React.FC = () => {
   const [user, setUser] = useState<any>(null);
@@ -15,7 +16,7 @@ const Dashboard: React.FC = () => {
         const data = await getDashboardData();
         setUser(data);
       } catch (err: any) {
-        setError(err.message); 
+        setError(err.message);
       }
     };
 
@@ -35,23 +36,12 @@ const Dashboard: React.FC = () => {
     });
 
   const getStatusBadge = (status: string) => {
+    const base = "inline-block text-xl px-3 py-1 rounded-full font-medium";
     if (status === "approved")
-      return (
-        <span className="text-green-700 bg-green-100 px-2 py-1 rounded-full">
-          {status}
-        </span>
-      );
+      return <span className={`${base} bg-green-100 text-green-700`}>{status}</span>;
     if (status === "pending")
-      return (
-        <span className="text-yellow-700 bg-yellow-100 px-4 pb-1 rounded-full">
-          {status}
-        </span>
-      );
-    return (
-      <span className="text-red-700 bg-red-100 px-2 py-1 rounded-full">
-        {status}
-      </span>
-    );
+      return <span className={`${base} bg-yellow-100 text-yellow-700`}>{status}</span>;
+    return <span className={`${base} bg-red-100 text-red-700`}>{status}</span>;
   };
 
   if (error) {
@@ -65,12 +55,11 @@ const Dashboard: React.FC = () => {
           <p className="text-gray-600 mb-4">
             If you want to apply for a new account, click below.
           </p>
-          <button
+          <Button
             onClick={() => navigate("/dashboard/apply-account")}
-            className="bg-[#004466] hover:bg-[#003348] text-white font-medium py-2 px-6 rounded-lg transition duration-200"
           >
-            Apply for Account
-          </button>
+            Apply For Account
+          </Button>
         </div>
       </div>
     );
@@ -85,125 +74,89 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="mb-10 bg-[#004466] text-white p-6 rounded-lg shadow-md">
-          <h1 className="text-4xl font-bold">Welcome, {user.full_name} 👋</h1>
-          <p className="mt-2 text-sm">
+    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-white py-10 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-8xl mx-auto space-y-10">
+
+        {/* Welcome Section */}
+        <div className="bg-[#004466] text-white p-6 sm:p-8 rounded-xl shadow-md text-center sm:text-left">
+          <h1 className="text-3xl sm:text-4xl font-bold">Welcome, {user.full_name} 👋</h1>
+          <p className="mt-2 text-sm sm:text-base opacity-90">
             Here’s a summary of your account and details.
           </p>
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <SummaryCard title="Account Number" value={user.account_number} />
           <SummaryCard title="Balance" value={formatCurrency(user.balance)} />
           <SummaryCard title="Status" value={getStatusBadge(user.status)} />
           <SummaryCard title="Account Type" value={user.account_type} />
         </div>
 
-        {/* Personal Details */}
+        {/* Personal Info */}
         <Section title="Personal Information">
-          <table className="w-full table-auto text-sm">
-            <thead>
-              <tr className="bg-gray-100 text-left">
-                <th className="p-2 w-1/3">Field</th>
-                <th className="p-2 w-2/3">Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b">
-                <td className="p-2 font-semibold align-top">Email</td>
-                <td className="p-2 align-top">{user.email}</td>
-              </tr>
-              <tr className="border-b">
-                <td className="p-2 font-semibold align-top">Phone Number</td>
-                <td className="p-2 align-top">{user.phone_number}</td>
-              </tr>
-              <tr>
-                <td className="p-2 font-semibold align-top">Address</td>
-                <td className="p-2 align-top">{user.address}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="text-gray-500 mb-1">Email</p>
+              <p className="text-gray-800 font-medium">{user.email}</p>
+            </div>
+            <div>
+              <p className="text-gray-500 mb-1">Phone Number</p>
+              <p className="text-gray-800 font-medium">{user.phone_number}</p>
+            </div>
+            <div className="sm:col-span-2">
+              <p className="text-gray-500 mb-1">Address</p>
+              <p className="text-gray-800 font-medium">{user.address}</p>
+            </div>
+          </div>
         </Section>
 
         {/* Account Info */}
         <Section title="Account Information">
-          <table className="w-full table-auto text-sm">
-            <thead>
-              <tr className="bg-gray-100 text-left">
-                <th className="p-2 w-1/3">Field</th>
-                <th className="p-2 w-2/3">Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b">
-                <td className="p-2 font-semibold align-top">Account Type</td>
-                <td className="p-2 align-top">{user.account_type}</td>
-              </tr>
-              <tr className="border-b">
-                <td className="p-2 font-semibold align-top">Account Number</td>
-                <td className="p-2 align-top">{user.account_number}</td>
-              </tr>
-              <tr className="border-b">
-                <td className="p-2 font-semibold align-top">Status</td>
-                <td className="p-2 align-top">{getStatusBadge(user.status)}</td>
-              </tr>
-              <tr>
-                <td className="p-2 font-semibold align-top">Balance</td>
-                <td className="p-2 align-top">
-                  {formatCurrency(user.balance)}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="text-gray-500 mb-1">Account Type</p>
+              <p className="text-gray-800 font-medium">{user.account_type}</p>
+            </div>
+            <div>
+              <p className="text-gray-500 mb-1">Account Number</p>
+              <p className="text-gray-800 font-medium">{user.account_number}</p>
+            </div>
+            <div>
+              <p className="text-gray-500 mb-1">Status</p>
+              <p className="text-gray-800 font-medium">{getStatusBadge(user.status)}</p>
+            </div>
+            <div>
+              <p className="text-gray-500 mb-1">Balance</p>
+              <p className="text-gray-800 font-medium">{formatCurrency(user.balance)}</p>
+            </div>
+          </div>
         </Section>
 
         {/* KYC Info */}
         <Section title="KYC Details">
-          <table className="w-full table-auto text-sm">
-            <thead>
-              <tr className="bg-gray-100 text-left">
-                <th className="p-2 w-1/3">Field</th>
-                <th className="p-2 w-2/3">Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b">
-                <td className="p-2 font-semibold align-top">Aadhaar Number</td>
-                <td className="p-2 align-top">{user.aadhaar_number}</td>
-              </tr>
-              <tr className="border-b">
-                <td className="p-2 font-semibold align-top">PAN Number</td>
-                <td className="p-2 align-top">{user.pan_number}</td>
-              </tr>
-              <tr>
-                <td className="p-2 font-semibold align-top">Submitted On</td>
-                <td className="p-2 align-top">
-                  {formatDate(user.submitted_at)}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="text-gray-500 mb-1">Aadhaar Number</p>
+              <p className="text-gray-800 font-medium">{user.aadhaar_number}</p>
+            </div>
+            <div>
+              <p className="text-gray-500 mb-1">PAN Number</p>
+              <p className="text-gray-800 font-medium">{user.pan_number}</p>
+            </div>
+            <div className="sm:col-span-2">
+              <p className="text-gray-500 mb-1">Submitted On</p>
+              <p className="text-gray-800 font-medium">{formatDate(user.submitted_at)}</p>
+            </div>
+          </div>
         </Section>
 
         {/* Nominee Info */}
         <Section title="Nominee Information">
-          <table className="w-full table-auto text-sm">
-            <thead>
-              <tr className="bg-gray-100 text-left">
-                <th className="p-2 w-1/3">Field</th>
-                <th className="p-2 w-2/3">Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="p-2 font-semibold align-top">Relationship</td>
-                <td className="p-2 align-top">{user.nominee_relationship}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="text-sm">
+            <p className="text-gray-500 mb-1">Relationship</p>
+            <p className="text-gray-800 font-medium">{user.nominee_relationship}</p>
+          </div>
         </Section>
       </div>
     </div>

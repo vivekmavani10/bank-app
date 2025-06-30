@@ -18,7 +18,6 @@ const AdminDashboard: React.FC = () => {
         setError(error.message);
       }
     };
-
     fetchData();
   }, []);
 
@@ -35,23 +34,18 @@ const AdminDashboard: React.FC = () => {
     });
 
   const getStatusBadge = (status: string) => {
+    const base = "inline-block text-xs px-3 py-1 rounded-full font-medium";
     if (status === "approved")
       return (
-        <span className="text-green-700 bg-green-100 px-2 py-1 rounded-full">
-          {status}
-        </span>
+        <span className={`${base} bg-green-100 text-green-700`}>{status}</span>
       );
     if (status === "pending")
       return (
-        <span className="text-yellow-700 bg-yellow-100 px-2 py-1 rounded-full">
+        <span className={`${base} bg-yellow-100 text-yellow-700`}>
           {status}
         </span>
       );
-    return (
-      <span className="text-red-700 bg-red-100 px-2 py-1 rounded-full">
-        {status}
-      </span>
-    );
+    return <span className={`${base} bg-red-100 text-red-700`}>{status}</span>;
   };
 
   if (error) {
@@ -64,22 +58,25 @@ const AdminDashboard: React.FC = () => {
 
   if (!dashboardData) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center min-h-screen text-gray-600">
         Loading...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="mb-10 bg-[#004466] text-white p-6 rounded-lg shadow-md">
-          <h1 className="text-4xl font-bold">Admin Dashboard</h1>
-          <p className="mt-2">Manage and monitor all user and bank activity.</p>
+    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-white py-10 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-8xl mx-auto space-y-12">
+        {/* Header */}
+        <div className="bg-[#004466] text-white p-6 sm:p-8 rounded-2xl shadow-lg">
+          <h1 className="text-3xl sm:text-4xl font-bold">Admin Dashboard</h1>
+          <p className="mt-2 text-sm sm:text-base opacity-90">
+            Monitor all user accounts and transaction activity in real time.
+          </p>
         </div>
 
         {/* KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           <SummaryCard
             title="Total Users"
             value={String(dashboardData.totalUsers)}
@@ -102,106 +99,148 @@ const AdminDashboard: React.FC = () => {
           />
         </div>
 
-        {/* Applications Section */}
+        {/* Applications Table */}
         <Section title="Recent Account Applications">
-          <div className="hidden md:block overflow-x-auto">
-            <table className="w-full table-auto text-sm">
-              <thead>
-                <tr className="bg-gray-100 text-left">
-                  <th className="p-2">Name</th>
-                  <th className="p-2">Account Type</th>
-                  <th className="p-2">Status</th>
-                  <th className="p-2">Applied At</th>
-                  <th className="p-2">Actions</th>
+          {/* Desktop Table */}
+          <div className="hidden md:block overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+            <table className="w-full text-sm text-gray-700">
+              <thead className="bg-gray-100 text-left">
+                <tr>
+                  <th className="px-4 py-3">Name</th>
+                  <th className="px-4 py-3">Account Type</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Applied At</th>
+                  <th className="px-4 py-3">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {dashboardData.recentAccountApplications?.map((app: any) => (
-                  <tr key={app.account_id} className="border-b hover:bg-gray-100">
-                    <td className="p-2">{app.full_name}</td>
-                    <td className="p-2 capitalize">{app.account_type}</td>
-                    <td className="p-2">{getStatusBadge(app.status)}</td>
-                    <td className="p-2">{formatDate(app.created_at)}</td>
-                    <td className="p-2 space-x-2">
-                      <button className="text-green-600">Approve</button>
-                      <button className="text-red-600">Reject</button>
-                    </td>
-                  </tr>
-                ))}
+                {dashboardData.recentAccountApplications?.map(
+                  (app: any, idx: number) => (
+                    <tr
+                      key={app.account_id}
+                      className={
+                        idx % 2 === 0
+                          ? "bg-white"
+                          : "bg-gray-50 hover:bg-gray-100"
+                      }
+                    >
+                      <td className="px-4 py-3 font-medium">{app.full_name}</td>
+                      <td className="px-4 py-3 capitalize">
+                        {app.account_type}
+                      </td>
+                      <td className="px-4 py-3">
+                        {getStatusBadge(app.status)}
+                      </td>
+                      <td className="px-4 py-3">
+                        {formatDate(app.created_at)}
+                      </td>
+                      <td className="px-4 py-3 space-x-2">
+                        <button className="text-green-700 hover:underline">
+                          Approve
+                        </button>
+                        <button className="text-red-700 hover:underline">
+                          Reject
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                )}
               </tbody>
             </table>
           </div>
 
-          <div className="space-y-4 md:hidden">
+          {/* Mobile Cards */}
+          <div className="space-y-4 md:hidden mt-4">
             {dashboardData.recentAccountApplications?.map((app: any) => (
               <div
                 key={app.account_id}
-                className="bg-white p-4 rounded-lg shadow-md border space-y-2"
+                className="bg-white border rounded-xl p-4 shadow-sm space-y-2"
               >
-                <div className="text-base font-semibold">{app.full_name}</div>
-                <div className="text-sm text-gray-600">
-                  Account Type:{" "}
-                  <span className="capitalize">{app.account_type}</span>
-                </div>
-                <div className="text-sm text-gray-600">
+                <p className="font-semibold text-base">{app.full_name}</p>
+                <p className="text-sm text-gray-600">
+                  Type: <span className="capitalize">{app.account_type}</span>
+                </p>
+                <p className="text-sm text-gray-600">
                   Status: {getStatusBadge(app.status)}
-                </div>
-                <div className="text-sm text-gray-600">
-                  Applied At: {formatDate(app.created_at)}
-                </div>
-                <div className="flex gap-4 pt-2">
-                  <button className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                </p>
+                <p className="text-sm text-gray-600">
+                  Applied: {formatDate(app.created_at)}
+                </p>
+                <div className="flex gap-4 pt-1">
+                  <button className="text-green-700 hover:underline text-sm">
                     Approve
                   </button>
-                  <button className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">
+                  <button className="text-red-700 hover:underline text-sm">
                     Reject
                   </button>
                 </div>
               </div>
             ))}
           </div>
+
           <div
-            className="text-black text-center mt-3 cursor-pointer underline"
+            className="text-center mt-4 text-sm text-black-700 hover:text-black-900 underline cursor-pointer"
             onClick={() => navigate("/admin-dashboard/accounts")}
           >
             View All Applications
           </div>
         </Section>
 
-        {/* Recent Transactions */}
+        {/* Transactions Table */}
         <Section title="Recent Transactions">
-          <div className="hidden md:block overflow-x-auto">
-            <table className="w-full table-auto text-sm">
-              <thead>
-                <tr className="bg-gray-100 text-left">
-                  <th className="p-2">From</th>
-                  <th className="p-2">To</th>
-                  <th className="p-2">Amount</th>
-                  <th className="p-2">Type</th>
-                  <th className="p-2">Date</th>
-                  <th className="p-2">Status</th>
+          {/* Desktop Table */}
+          <div className="hidden md:block overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+            <table className="w-full text-sm text-gray-700">
+              <thead className="bg-gray-100 text-left">
+                <tr>
+                  <th className="px-4 py-3">From</th>
+                  <th className="px-4 py-3">To</th>
+                  <th className="px-4 py-3">Amount</th>
+                  <th className="px-4 py-3">Type</th>
+                  <th className="px-4 py-3">Date</th>
+                  <th className="px-4 py-3">Status</th>
                 </tr>
               </thead>
               <tbody>
-                {dashboardData.recentTransactions?.map((txn: any) => (
-                  <tr key={txn.transaction_id} className="border-b hover:bg-gray-100">
-                    <td className="p-2">{txn.sender_account || "-"}</td>
-                    <td className="p-2">{txn.receiver_account || "-"}</td>
-                    <td className="p-2">{formatCurrency(txn.amount)}</td>
-                    <td className="p-2 capitalize">{txn.transaction_type}</td>
-                    <td className="p-2">{formatDate(txn.created_at)}</td>
-                    <td className="p-2 text-green-600">{txn.status}</td>
-                  </tr>
-                ))}
+                {dashboardData.recentTransactions?.map(
+                  (txn: any, idx: number) => (
+                    <tr
+                      key={txn.transaction_id}
+                      className={
+                        idx % 2 === 0
+                          ? "bg-white"
+                          : "bg-gray-50 hover:bg-gray-100"
+                      }
+                    >
+                      <td className="px-4 py-3">{txn.sender_account || "-"}</td>
+                      <td className="px-4 py-3">
+                        {txn.receiver_account || "-"}
+                      </td>
+                      <td className="px-4 py-3">
+                        {formatCurrency(txn.amount)}
+                      </td>
+                      <td className="px-4 py-3 capitalize">
+                        {txn.transaction_type}
+                      </td>
+                      <td className="px-4 py-3">
+                        {formatDate(txn.created_at)}
+                      </td>
+                      <td className="px-4 py-3 text-green-700 font-medium">
+                        {txn.status}
+                      </td>
+                    </tr>
+                  )
+                )}
               </tbody>
             </table>
           </div>
 
-          <div className="space-y-4 md:hidden">
+          {/* Mobile Cards */}
+          <div className="space-y-4 md:hidden mt-4">
             {dashboardData.recentTransactions?.map((txn: any) => (
               <div
                 key={txn.transaction_id}
-                className="bg-white p-4 rounded-lg shadow-md border space-y-2"
+                className="bg-white border rounded-xl p-4 shadow-sm space-y-2"
               >
                 <p className="text-sm">
                   <strong>From:</strong> {txn.sender_account || "-"}
@@ -221,15 +260,14 @@ const AdminDashboard: React.FC = () => {
                 </p>
                 <p className="text-sm">
                   <strong>Status:</strong>{" "}
-                  <span className="text-green-700 font-medium">
-                    {txn.status}
-                  </span>
+                  <span className="text-green-700">{txn.status}</span>
                 </p>
               </div>
             ))}
           </div>
+
           <div
-            className="text-black text-center mt-3 cursor-pointer underline"
+            className="text-center mt-4 text-sm text-black-700 hover:text-black-900 underline cursor-pointer"
             onClick={() => navigate("/admin-dashboard/transactions")}
           >
             View All Transactions
