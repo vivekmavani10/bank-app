@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { loginUser } from "../api/authApi";
@@ -56,8 +55,8 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#fcfcfc] min-h-[calc(100vh-95px)] flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+    <div className="min-h-[calc(100vh-90px)] bg-gradient-to-br from-gray-50 to-white py-4 px-4 flex items-center justify-center">
+      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
         <h1 className="text-3xl font-bold text-center text-[#004466]">
           Login to <span className="text-[#d7555e]">KV Bank</span>
         </h1>

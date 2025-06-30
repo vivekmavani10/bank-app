@@ -68,7 +68,6 @@ const ApplyAccount: React.FC = () => {
       address,
     } = formData;
 
-    // Validation
     if (
       !account_type ||
       !initial_deposit ||
@@ -108,7 +107,6 @@ const ApplyAccount: React.FC = () => {
       });
 
       toast.success(message);
-      // Reset form
       setFormData({
         full_name: "",
         email: "",
@@ -130,220 +128,224 @@ const ApplyAccount: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-[#004466] mb-2">
-              Bank Account Application
-            </h1>
-            <p className="text-[#004466]">
-              Fill in the details to open your new account
-            </p>
-          </div>
+    <div className="min-h-[calc(97vh-90px)] bg-gradient-to-br from-gray-100 to-white py-4 px-4">
+      <div className="max-w-8xl mx-auto bg-white shadow-xl rounded-2xl p-8">
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-bold text-[#004466] mb-2">
+            Apply for a Bank Account
+          </h1>
+          <p className="text-md text-gray-600">
+            Please provide accurate details and upload required documents
+          </p>
+        </div>
 
-          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        {error && <p className="text-red-500 text-center mb-6">{error}</p>}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Personal Information */}
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <h2 className="text-xl font-semibold text-[#004466] mb-4">
-                Personal Information
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Input
-                  label="Full Name *"
-                  name="full_name"
-                  value={formData.full_name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, full_name: e.target.value })
-                  }
-                  required
-                  placeholder="Enter full name"
-                />
-                <Input
-                  label="Email *"
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  required
-                  placeholder="Enter email"
-                />
-                <Input
-                  label="Phone Number *"
-                  name="phone_number"
-                  value={formData.phone_number}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone_number: e.target.value })
-                  }
-                  required
-                  placeholder="Enter phone number"
-                />
-              </div>
-            </div>
-
-            {/* Account Details */}
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <h2 className="text-xl font-semibold text-[#004466] mb-4">
-                Account Details
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Dropdown
-                  label="Account Type *"
-                  name="account_type"
-                  value={formData.account_type}
-                  onChange={(e) =>
-                    setFormData({ ...formData, account_type: e.target.value })
-                  }
-                  options={accountTypeOptions}
-                  placeholder="Select account type"
-                  required
-                />
-                <Input
-                  label="Initial Deposit (₹) *"
-                  type="number"
-                  name="initial_deposit"
-                  value={formData.initial_deposit}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      initial_deposit: e.target.value,
-                    })
-                  }
-                  required
-                  placeholder="Enter amount"
-                />
-                <Input
-                  label="Aadhar Number *"
-                  name="aadhar_number"
-                  value={formData.aadhar_number}
-                  onChange={(e) =>
-                    setFormData({ ...formData, aadhar_number: e.target.value })
-                  }
-                  required
-                  placeholder="Enter 12-digit Aadhar"
-                />
-              </div>
-            </div>
-
-            {/* Document Upload */}
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <h2 className="text-xl font-semibold text-[#004466] mb-4">
-                Document Upload
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Aadhar File *
-                  </label>
-                  <input
-                    type="file"
-                    name="aadhar_file"
-                    accept=".pdf,.jpg,.jpeg,.png"
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        aadhar_file: e.target.files?.[0] || null,
-                      })
-                    }
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    PAN File *
-                  </label>
-                  <input
-                    type="file"
-                    name="pan_file"
-                    accept=".pdf,.jpg,.jpeg,.png"
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pan_file: e.target.files?.[0] || null,
-                      })
-                    }
-                    required
-                  />
-                </div>
-                <Input
-                  label="PAN Number *"
-                  name="pan_number"
-                  value={formData.pan_number}
-                  onChange={(e) =>
-                    setFormData({ ...formData, pan_number: e.target.value })
-                  }
-                  required
-                  placeholder="Enter PAN"
-                />
-              </div>
-            </div>
-
-            {/* Nominee Details */}
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <h2 className="text-xl font-semibold text-[#004466] mb-4">
-                Nominee Information
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
-                  label="Nominee Name *"
-                  name="nominee_name"
-                  value={formData.nominee_name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, nominee_name: e.target.value })
-                  }
-                  required
-                  placeholder="Enter nominee name"
-                />
-                <Dropdown
-                  label="Relationship *"
-                  name="nominee_relationship"
-                  value={formData.nominee_relationship}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      nominee_relationship: e.target.value,
-                    })
-                  }
-                  options={relationshipOptions}
-                  placeholder="Select relationship"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Address */}
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <h2 className="text-xl font-semibold text-[#004466] mb-4">
-                Address Information *
-              </h2>
-              <textarea
-                name="address"
-                value={formData.address}
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Personal Info */}
+          <section className="p-6 bg-gray-50 border border-gray-200 rounded-xl">
+            <h2 className="text-2xl font-semibold text-[#004466] mb-6">
+              Personal Information
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Input
+                label="Full Name *"
+                name="full_name"
+                value={formData.full_name}
                 onChange={(e) =>
-                  setFormData({ ...formData, address: e.target.value })
+                  setFormData({ ...formData, full_name: e.target.value })
                 }
                 required
-                rows={3}
-                className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Enter your full address"
+                placeholder="Enter full name"
+              />
+              <Input
+                label="Email *"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                required
+                placeholder="Enter email"
+              />
+              <Input
+                label="Phone Number *"
+                name="phone_number"
+                value={formData.phone_number}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone_number: e.target.value })
+                }
+                required
+                placeholder="Enter phone number"
               />
             </div>
+          </section>
 
-            {/* Submit */}
-            <div className="flex justify-center pt-6">
-              <Button type="submit" className="px-8 py-3 text-lg font-semibold">
-                Submit Application
-              </Button>
+          {/* Account Details */}
+          <section className="p-6 bg-gray-50 border border-gray-200 rounded-xl">
+            <h2 className="text-2xl font-semibold text-[#004466] mb-6">
+              Account Details
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Dropdown
+                label="Account Type *"
+                name="account_type"
+                value={formData.account_type}
+                onChange={(e) =>
+                  setFormData({ ...formData, account_type: e.target.value })
+                }
+                options={accountTypeOptions}
+                placeholder="Select account type"
+                required
+              />
+              <Input
+                label="Initial Deposit (₹) *"
+                type="number"
+                name="initial_deposit"
+                value={formData.initial_deposit}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    initial_deposit: e.target.value,
+                  })
+                }
+                required
+                placeholder="Enter amount"
+              />
+              <Input
+                label="Aadhar Number *"
+                name="aadhar_number"
+                value={formData.aadhar_number}
+                onChange={(e) =>
+                  setFormData({ ...formData, aadhar_number: e.target.value })
+                }
+                required
+                placeholder="Enter 12-digit Aadhar"
+              />
             </div>
-          </form>
-        </div>
+          </section>
+
+          {/* Document Upload */}
+          <section className="p-6 bg-gray-50 border border-gray-200 rounded-xl">
+            <h2 className="text-2xl font-semibold text-[#004466] mb-6">
+              Document Upload
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Aadhar File *
+                </label>
+                <input
+                  type="file"
+                  name="aadhar_file"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      aadhar_file: e.target.files?.[0] || null,
+                    })
+                  }
+                  required
+                  className="w-full border border-gray-300 rounded-md p-2"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  PAN File *
+                </label>
+                <input
+                  type="file"
+                  name="pan_file"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      pan_file: e.target.files?.[0] || null,
+                    })
+                  }
+                  required
+                  className="w-full border border-gray-300 rounded-md p-2"
+                />
+              </div>
+              <Input
+                label="PAN Number *"
+                name="pan_number"
+                value={formData.pan_number}
+                onChange={(e) =>
+                  setFormData({ ...formData, pan_number: e.target.value })
+                }
+                required
+                placeholder="Enter PAN"
+              />
+            </div>
+          </section>
+
+          {/* Nominee */}
+          <section className="p-6 bg-gray-50 border border-gray-200 rounded-xl">
+            <h2 className="text-2xl font-semibold text-[#004466] mb-6">
+              Nominee Information
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Input
+                label="Nominee Name *"
+                name="nominee_name"
+                value={formData.nominee_name}
+                onChange={(e) =>
+                  setFormData({ ...formData, nominee_name: e.target.value })
+                }
+                required
+                placeholder="Enter nominee name"
+              />
+              <Dropdown
+                label="Relationship *"
+                name="nominee_relationship"
+                value={formData.nominee_relationship}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    nominee_relationship: e.target.value,
+                  })
+                }
+                options={relationshipOptions}
+                placeholder="Select relationship"
+                required
+              />
+            </div>
+          </section>
+
+          {/* Address */}
+          <section className="p-6 bg-gray-50 border border-gray-200 rounded-xl">
+            <h2 className="text-2xl font-semibold text-[#004466] mb-6">
+              Address
+            </h2>
+            <textarea
+              name="address"
+              value={formData.address}
+              onChange={(e) =>
+                setFormData({ ...formData, address: e.target.value })
+              }
+              required
+              rows={4}
+              className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-[#004466] focus:border-[#004466]"
+              placeholder="Enter your full address"
+            />
+          </section>
+
+          {/* Submit */}
+          <div className="flex justify-center pt-6">
+            <Button
+              type="submit"
+              className="px-8 py-3 text-lg font-semibold bg-[#004466] text-white hover:bg-[#00334d] rounded-xl shadow-md transition"
+            >
+              Submit Application
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   );
 };
 
 export default ApplyAccount;
+  

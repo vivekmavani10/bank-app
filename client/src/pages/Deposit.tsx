@@ -54,7 +54,7 @@ const Deposit: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[calc(97vh-90px)] bg-[#f4f8fb] flex items-center justify-center px-4">
+    <div className="min-h-[calc(97vh-90px)] bg-gray-100 flex items-center justify-center px-4">
       <div className="w-full max-w-2xl bg-white p-10 rounded-2xl shadow-lg">
         <h2 className="text-3xl sm:text-4xl font-extrabold text-[#004466] mb-8 text-center">
           Deposit Money

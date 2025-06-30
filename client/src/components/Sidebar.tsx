@@ -63,6 +63,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           >
             Transaction
           </Link>
+                    <Link
+            to="/dashboard/transaction-history"
+            onClick={onClose}
+            className="hover:bg-[#d7555e] text-[#004466] hover:text-white rounded-md px-3 py-2 transition"
+          >
+            Transaction History
+          </Link>
         </div>
       </div>
     </>

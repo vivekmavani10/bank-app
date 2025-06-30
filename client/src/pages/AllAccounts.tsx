@@ -70,14 +70,14 @@ const AllAccounts: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[calc(97vh-90px)] bg-gradient-to-br from-gray-100 to-white py-4 px-4">
-      <div className="max-w-8xl mx-auto bg-white shadow-xl rounded-2xl p-8">
-        <h1 className="text-4xl font-bold text-center text-[#004466] mb-8">
+    <div className="min-h-[calc(97vh-90px)] bg-gradient-to-br from-gray-100 to-white py-4 px-2 sm:px-4">
+      <div className="w-full max-w-8xl mx-auto bg-white shadow-xl rounded-2xl p-4 sm:p-6 lg:p-8">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center text-[#004466] mb-6 sm:mb-8">
           Manage All Bank Accounts
         </h1>
 
-        <div className="overflow-x-auto rounded-xl border border-gray-200">
-          <table className="min-w-full text-sm text-gray-700 text-center">
+        <div className="w-full overflow-x-auto rounded-xl border border-gray-200">
+          <table className="w-full min-w-[700px] text-sm text-gray-700 text-center">
             <thead className="bg-[#004466] text-white">
               <tr>
                 <th className="py-3 px-4">Name</th>
@@ -89,44 +89,66 @@ const AllAccounts: React.FC = () => {
                 <th className="py-3 px-4">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 scrol">
-              {accounts.map((account, index) => (
-                <tr
-                  key={index}
-                  className="hover:bg-gray-100 transition cursor-pointer"
-                  onClick={() => setSelectedAccount(account)}
-                >
-                  <td className="py-3 px-4 font-medium">{account.full_name}</td>
-                  <td className="py-3 px-4">{account.phone_number}</td>
-                  <td className="py-3 px-4">{account.email || "N/A"}</td>
-                  <td className="py-3 px-4">{account.account_number}</td>
-                  <td className="py-3 px-4 capitalize">{account.account_type}</td>
-                  <td className="py-3 px-4 font-semibold text-green-600">
-                    ₹{account.balance}
-                  </td>
-                  <td className="py-3 px-4">
-                    <Dropdown
-                      label=""
-                      name="status"
-                      value={statuses[index] || ""}
-                      onChange={(e) =>
-                        handleStatusChange(
-                          index,
-                          e.target.value,
-                          account.account_uuid
-                        )
-                      }
-                      options={statusOptions}
-                      placeholder="Pending"
-                      className="w-32 rounded-full px-2 py-1 text-sm border border-gray-300"
-                    />
+            <tbody className="divide-y divide-gray-200">
+              {accounts.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={7}
+                    className="py-6 text-center text-gray-500 italic"
+                  >
+                    No accounts found
                   </td>
                 </tr>
-              ))}
+              ) : (
+                accounts.map((account, index) => (
+                  <tr
+                    key={index}
+                    className="hover:bg-gray-100 transition cursor-pointer"
+                    onClick={() => setSelectedAccount(account)}
+                  >
+                    <td className="py-3 px-4 font-medium whitespace-nowrap">
+                      {account.full_name}
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      {account.phone_number}
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      {account.email || "N/A"}
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      {account.account_number}
+                    </td>
+                    <td className="py-3 px-4 capitalize whitespace-nowrap">
+                      {account.account_type}
+                    </td>
+                    <td className="py-3 px-4 font-semibold text-green-600 whitespace-nowrap">
+                      ₹{account.balance}
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      <Dropdown
+                        label=""
+                        name="status"
+                        value={statuses[index] || ""}
+                        onChange={(e) =>
+                          handleStatusChange(
+                            index,
+                            e.target.value,
+                            account.account_uuid
+                          )
+                        }
+                        options={statusOptions}
+                        placeholder="Pending"
+                        className="w-32 rounded-full px-2 py-1 text-sm border border-gray-300"
+                      />
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
 
+        {/* Account Detail Modal */}
         {selectedAccount && (
           <Card
             account={selectedAccount}
