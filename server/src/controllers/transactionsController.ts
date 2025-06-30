@@ -138,7 +138,10 @@ export const transferMoney = async (
   }
 };
 
-export const depositMoney = async (req: Request, res: Response) => {
+export const depositMoney = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { account_number, balance, description } = req.body;
 
@@ -193,5 +196,29 @@ export const depositMoney = async (req: Request, res: Response) => {
   } catch (error) {
     console.log("Error in deposit money: ", error);
     res.status(500).json({ status: "error", message: "Internal Server Error" });
+  }
+};
+
+export const getTransactionHistory = async (req: Request, res: Response) => {
+  try {
+    const user_id = (req as any).user?.user_id;
+
+    if (!user_id) {
+      res.status(401).json({ status: "error", message: "Unauthorized" });
+      return;
+    }
+
+    const transactions = await transactionModel.getTransactionHistory(user_id);
+
+    res.status(200).json({
+      status: "success",
+      data: transactions,
+    });
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to fetch transactions",
+    });
   }
 };
