@@ -350,9 +350,35 @@ export const downloadTransactionStatementPDF = async (
   }
 };
 
+// export const getAllTransactionsForAdmin = async (req: Request, res: Response) => {
+//   try {
+//     const transactions = await transactionModel.getAllTransactions();
+
+//     res.status(200).json({
+//       status: "success",
+//       data: transactions,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching all transactions:", error);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Failed to fetch all transactions",
+//     });
+//   }
+// };
+
 export const getAllTransactionsForAdmin = async (req: Request, res: Response) => {
   try {
-    const transactions = await transactionModel.getAllTransactions();
+    const typeParam = (req.query.type as string || "all").toLowerCase();
+    const allowedTypes = ["all", "credit", "debit", "transfer"];
+    if (!allowedTypes.includes(typeParam)) {
+      return res.status(400).json({
+        status: "error",
+        message: `Invalid transaction type. Allowed types: ${allowedTypes.join(", ")}`,
+      });
+    }
+
+    const transactions = await transactionModel.getAllTransactions(typeParam);
 
     res.status(200).json({
       status: "success",
@@ -366,4 +392,3 @@ export const getAllTransactionsForAdmin = async (req: Request, res: Response) =>
     });
   }
 };
-

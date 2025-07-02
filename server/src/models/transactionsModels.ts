@@ -136,9 +136,8 @@ export class TransactionModel {
 
     return rows;
   }
-  async getAllTransactions(): Promise<any[]> {
-  const [rows]: any = await this.db.execute(
-    `
+async getAllTransactions(type: string = "all"): Promise<any[]> {
+  let query = `
     SELECT 
       t.transaction_id,
       t.transaction_uuid,
@@ -154,11 +153,21 @@ export class TransactionModel {
     FROM transactions t
     LEFT JOIN accounts a_sender ON t.sender_account = a_sender.account_number
     LEFT JOIN accounts a_receiver ON t.receiver_account = a_receiver.account_number
-    ORDER BY t.created_at DESC
-    `
-  );
+  `;
 
+  const params: any[] = [];
+
+  if (type && type !== "all") {
+    query += ` WHERE t.transaction_type = ?`;
+    params.push(type);
+  }
+
+  query += ` ORDER BY t.created_at DESC`;
+
+  const [rows]: any = await this.db.execute(query, params);
   return rows;
 }
+
+
 
 }

@@ -13,10 +13,10 @@ const AdminTransaction = () => {
     { value: "debit", label: "Debit" },
   ];
 
-   useEffect(() => {
+  useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const data = await fetchAllTransactionsAdmin();
+        const data = await fetchAllTransactionsAdmin(filterType); 
         setTransactions(data);
       } catch (error) {
         console.error("Error fetching admin transactions:", error.message);
@@ -24,14 +24,7 @@ const AdminTransaction = () => {
     };
 
     fetchTransactions();
-  }, []);
-
-
- 
-  const filteredTransactions =
-    filterType === "all"
-      ? transactions
-      : transactions.filter((txn) => txn.transaction_type === filterType);
+  }, [filterType]);
 
   return (
    <div className="min-h-[calc(97vh-90px)] bg-gradient-to-br from-gray-100 to-white py-4 px-2 sm:px-4">
@@ -63,14 +56,14 @@ const AdminTransaction = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {filteredTransactions.length === 0 ? (
+              {transactions.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="py-6 text-gray-500 italic">
                     No transactions found
                   </td>
                 </tr>
               ) : (
-                filteredTransactions.map((txn, index) => (
+                transactions.map((txn, index) => (
                   <tr
                     key={txn.transaction_id || index}
                     className="hover:bg-gray-100 transition"

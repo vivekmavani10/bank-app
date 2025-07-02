@@ -72,9 +72,9 @@ export const transferMoney = async (payload: TransferPayload) => {
   }
 };
 
-export const fetchAllTransactionsAdmin = async () => {
+export const fetchAllTransactionsAdmin = async (type: string = "all") => {
   try {
-    const { data } = await axiosInstance.get("/transaction");
+    const { data } = await axiosInstance.get(`/transaction?type=${type}`);
     if (data?.status === "success") {
       return data.data;
     } else {
@@ -86,3 +86,4 @@ export const fetchAllTransactionsAdmin = async () => {
     );
   }
 };
+
