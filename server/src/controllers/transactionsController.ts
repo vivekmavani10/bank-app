@@ -349,3 +349,21 @@ export const downloadTransactionStatementPDF = async (
       .json({ status: "error", message: "Failed to generate PDF" });
   }
 };
+
+export const getAllTransactionsForAdmin = async (req: Request, res: Response) => {
+  try {
+    const transactions = await transactionModel.getAllTransactions();
+
+    res.status(200).json({
+      status: "success",
+      data: transactions,
+    });
+  } catch (error) {
+    console.error("Error fetching all transactions:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to fetch all transactions",
+    });
+  }
+};
+

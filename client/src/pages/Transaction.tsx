@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import Popup from "../components/Popup";
+import { transferMoney } from "../api/transactionsApi";
+import { toast } from "react-toastify";
 
 const Transaction: React.FC = () => {
   const [receiverAccount, setReceiverAccount] = useState("");
@@ -9,6 +11,8 @@ const Transaction: React.FC = () => {
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [showPopup, setShowPopup] = useState(false);
+   
+ 
 
   const validateForm = (): boolean => {
     if (!receiverAccount || !amount) {
@@ -37,19 +41,24 @@ const Transaction: React.FC = () => {
     }
   };
 
-  const handleConfirmTransfer = () => {
-    console.log("Transfer details:", {
-      receiverAccount,
-      amount,
-      description,
-    });
+ const handleConfirmTransfer = async () => {
+    
+    try {
+      await transferMoney({
+        receiver_account: receiverAccount,
+        amount: Number(amount),
+        description,
+      });
 
-    alert("Transfer submitted!");
-
-    setReceiverAccount("");
-    setAmount("");
-    setDescription("");
-    setShowPopup(false);
+      toast.success(" Transaction successful!");
+      setReceiverAccount("");
+      setAmount("");
+      setDescription("");
+    } catch (err: any) {
+     toast.error(` Transaction failed: ${err.message}`);
+    } finally {
+      setShowPopup(false);
+    }
   };
 
   return (

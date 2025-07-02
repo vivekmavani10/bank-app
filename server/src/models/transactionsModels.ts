@@ -136,4 +136,29 @@ export class TransactionModel {
 
     return rows;
   }
+  async getAllTransactions(): Promise<any[]> {
+  const [rows]: any = await this.db.execute(
+    `
+    SELECT 
+      t.transaction_id,
+      t.transaction_uuid,
+      t.sender_account,
+      t.receiver_account,
+      t.amount,
+      t.transaction_type,
+      t.status,
+      t.description,
+      t.created_at,
+      a_sender.user_id as sender_user_id,
+      a_receiver.user_id as receiver_user_id
+    FROM transactions t
+    LEFT JOIN accounts a_sender ON t.sender_account = a_sender.account_number
+    LEFT JOIN accounts a_receiver ON t.receiver_account = a_receiver.account_number
+    ORDER BY t.created_at DESC
+    `
+  );
+
+  return rows;
+}
+
 }

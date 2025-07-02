@@ -6,6 +6,12 @@ export interface DepositPayload {
     description: string;
 }
 
+export interface TransferPayload {
+  receiver_account: string;
+  amount: number;
+  description: string;
+}
+
 export const depositMoney = async (payload: DepositPayload) => {
   try {
     const { data } = await axiosInstance.post("/deposit", payload);
@@ -46,6 +52,37 @@ export const downloadStatement = async (): Promise<Blob> => {
   } catch (error: any) {
     throw new Error(
       error?.response?.data?.message || error.message || "Failed to download statement"
+    );
+  }
+};
+
+export const transferMoney = async (payload: TransferPayload) => {
+  try {
+    const { data } = await axiosInstance.post("/transfer", payload);
+
+    if (data?.status === "success") {
+      return data.data;
+    } else {
+      throw new Error(data?.message || "Transfer failed!");
+    }
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message || error.message || "Something went wrong"
+    );
+  }
+};
+
+export const fetchAllTransactionsAdmin = async () => {
+  try {
+    const { data } = await axiosInstance.get("/transaction");
+    if (data?.status === "success") {
+      return data.data;
+    } else {
+      throw new Error(data?.message || "Failed to load admin transactions");
+    }
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message || error.message || "Something went wrong"
     );
   }
 };

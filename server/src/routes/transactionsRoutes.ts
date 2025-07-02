@@ -4,7 +4,8 @@ import {
   transferMoney,
   depositMoney,
   getTransactionHistory,
-  downloadTransactionStatementPDF
+  downloadTransactionStatementPDF,
+  getAllTransactionsForAdmin
 } from "../controllers/transactionsController";
 import { adminCheck } from "../middlewares/admincheckMiddleware";
 
@@ -21,5 +22,8 @@ transactionRouter.get(
 );
 
 transactionRouter.get("/statement", authenticateToken, downloadTransactionStatementPDF);
+
+
+transactionRouter.get("/transaction",authenticateToken,adminCheck,getAllTransactionsForAdmin);
 
 export default transactionRouter;
