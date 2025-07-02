@@ -231,9 +231,7 @@ export const downloadTransactionStatementPDF = async (
     const user_id = (req as any).user?.user_id;
 
     if (!user_id) {
-      res
-        .status(401)
-        .json({ status: "error", message: "Unauthorized" });
+      res.status(401).json({ status: "error", message: "Unauthorized" });
       return;
     }
 
@@ -336,10 +334,7 @@ export const downloadTransactionStatementPDF = async (
 
     // Optional footer or notes
     doc.moveDown(2);
-    doc
-      .font("Helvetica-Oblique")
-      .fontSize(9)
-      .fillColor("#444")
+    doc.font("Helvetica-Oblique").fontSize(9).fillColor("#444");
 
     doc.end();
   } catch (error) {
@@ -350,36 +345,23 @@ export const downloadTransactionStatementPDF = async (
   }
 };
 
-// export const getAllTransactionsForAdmin = async (req: Request, res: Response) => {
-//   try {
-//     const transactions = await transactionModel.getAllTransactions();
-
-//     res.status(200).json({
-//       status: "success",
-//       data: transactions,
-//     });
-//   } catch (error) {
-//     console.error("Error fetching all transactions:", error);
-//     res.status(500).json({
-//       status: "error",
-//       message: "Failed to fetch all transactions",
-//     });
-//   }
-// };
-
-export const getAllTransactionsForAdmin = async (req: Request, res: Response) => {
+export const getAllTransactionsForAdmin = async (
+  req: Request,
+  res: Response
+) => {
   try {
-    const typeParam = (req.query.type as string || "all").toLowerCase();
+    const typeParam = ((req.query.type as string) || "all").toLowerCase();
     const allowedTypes = ["all", "credit", "debit", "transfer"];
     if (!allowedTypes.includes(typeParam)) {
-      return res.status(400).json({
+      res.status(400).json({
         status: "error",
-        message: `Invalid transaction type. Allowed types: ${allowedTypes.join(", ")}`,
+        message: `Invalid transaction type. Allowed types: ${allowedTypes.join(
+          ", "
+        )}`,
       });
+      return;
     }
-
     const transactions = await transactionModel.getAllTransactions(typeParam);
-
     res.status(200).json({
       status: "success",
       data: transactions,
