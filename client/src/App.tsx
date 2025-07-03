@@ -20,6 +20,7 @@ import Transaction from "./pages/Transaction";
 import Deposit from "./pages/Deposit";
 import TransactionHistory from "./pages/TransactionHistory";
 import Admintransaction from "./pages/AdmintransactionHistory";
+import AdminForgotPassword from "./pages/AdminForgotPassword";
 
 const App: React.FC = () => {
   return (
@@ -110,6 +111,7 @@ const App: React.FC = () => {
           <Route path="accounts" element={<AllAccounts />} />
           <Route path="deposit" element={<Deposit />}/>
           <Route path="transaction-history" element={<Admintransaction />} />
+          <Route path="forgot-password" element={<AdminForgotPassword />} />
         </Route>
       </Routes>
 

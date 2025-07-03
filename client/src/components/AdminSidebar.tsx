@@ -63,6 +63,13 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, onClose }) => {
           >
             Transaction-History
           </Link>
+          <Link
+            to="/admin-dashboard/forgot-password"
+            onClick={onClose}
+            className="hover:bg-[#d7555e] text-[#004466] hover:text-white rounded-md px-3 py-2 transition"
+          >
+            Forgot Password
+          </Link>
         </div>
       </div>
     </div>

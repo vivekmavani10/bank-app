@@ -8,6 +8,7 @@ import accountRoutes from './routes/accountRoutes';
 import adminAccountRoutes from './routes/adminAccountRoutes';
 import dashboardRoutes from './routes/dashboardRoutes';
 import transactionRouter from './routes/transactionsRoutes';
+import forgotPasswordRoutes from './routes/ForgotPasswordRoutes';
 
 dotenv.config();
 
@@ -22,7 +23,8 @@ app.use('/api',
   accountRoutes,
   adminAccountRoutes,
   dashboardRoutes,
-  transactionRouter
+  transactionRouter,
+  forgotPasswordRoutes
 
 );
 

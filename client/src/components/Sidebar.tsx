@@ -70,6 +70,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           >
             Transaction History
           </Link>
+          
         </div>
       </div>
     </>
