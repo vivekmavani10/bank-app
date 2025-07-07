@@ -46,7 +46,7 @@ const TransactionHistory: React.FC = () => {
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#004466] text-center sm:text-left">
             Transaction History
           </h1>
-          <Button onClick={handleDownloadStatement}>Download Statement</Button>
+          <Button className="mt-3" onClick={handleDownloadStatement}>Download Statement</Button>
         </div>
 
         <div className="overflow-x-auto rounded-xl border border-gray-200">
