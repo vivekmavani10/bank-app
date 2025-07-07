@@ -9,7 +9,6 @@ const ForgotPassword: React.FC = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   const validateForm = (): boolean => {
     if (!mobile || !newPassword || !confirmPassword) {
@@ -45,10 +44,8 @@ const ForgotPassword: React.FC = () => {
       setMobile("");
       setNewPassword("");
       setConfirmPassword("");
-      setError("");
     } catch (err: any) {
       toast.error("password reset failed");
-      setSuccess("");
     }
   };
   return (

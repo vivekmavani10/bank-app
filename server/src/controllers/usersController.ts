@@ -148,3 +148,48 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ status: "error", message: "Internal server error" });
   }
 };
+
+
+export const getUserProfile = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { user_id } = (req as any).user;
+
+    const user = await usersModel.getUserById(user_id);
+    if (!user) {
+      res.status(404).json({ status: "error", message: "User not found" });
+      return;
+    }
+
+    const { full_name, email, phone_number, address } = user;
+    res.status(200).json({
+      status: "success",
+      data: { full_name, email, phone_number, address },
+    });
+  } catch (error) {
+    console.error("Error getting profile:", error);
+    res.status(500).json({ status: "error", message: "Internal server error" });
+  }
+};
+
+export const updateUserProfile = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { user_id } = (req as any).user;
+    const { full_name, email, phone_number, address } = req.body;
+
+    const success = await usersModel.updateUserById(user_id, {
+      full_name,
+      email,
+      phone_number,
+      address,
+    });
+
+    if (!success) {
+      res.status(400).json({ status: "error", message: "Update failed" });
+      return;
+    }
+
+    res.status(200).json({ status: "success", message: "Profile updated successfully" });
+  } catch (error) {
+    res.status(500).json({ status: "error", message: "Internal server error" });
+  }
+};
