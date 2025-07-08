@@ -29,25 +29,25 @@ const AllAccounts: React.FC = () => {
   ];
 
   useEffect(() => {
-    const fetchAccounts = async () => {
-      try {
-        const accountsList = await FetchAllAccounts();
-        if (Array.isArray(accountsList)) {
-          setAccounts(accountsList);
-          setStatuses(accountsList.map((acc: any) => acc.status || ""));
-        } else {
-          setAccounts([]);
-          setStatuses([]);
-          toast.info("No accounts found.");
+      const fetchAccounts = async () => {
+        try {
+          const accountsList = await FetchAllAccounts(searchTerm);
+          if (Array.isArray(accountsList)) {
+            setAccounts(accountsList);
+            setStatuses(accountsList.map((acc: any) => acc.status || ""));
+          } else {
+            setAccounts([]);
+            setStatuses([]);
+            toast.info("No accounts found.");
+          }
+        } catch (error: any) {
+          toast.error(error.message || "Failed to load accounts");
+          console.error("Error fetching accounts:", error);
         }
-      } catch (error: any) {
-        toast.error(error.message || "Failed to load accounts");
-        console.error("Error fetching accounts:", error);
-      }
-    };
+      };
 
-    fetchAccounts();
-  }, []);
+      fetchAccounts();
+  }, [searchTerm]);
 
   const handleStatusChange = async (
     index: number,

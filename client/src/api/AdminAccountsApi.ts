@@ -12,8 +12,12 @@ interface AllAccounts {
 }
 
 // Fetch all accounts
-export const FetchAllAccounts = async (): Promise<AllAccounts[]> => {
-  const response = await axiosInstance.get("/accounts");
+export const FetchAllAccounts = async (searchTerm = ""): Promise<AllAccounts[]> => {
+  const response = await axiosInstance.get("/accounts", {
+    params: {
+      search: searchTerm.trim(), 
+    },
+  });
 
   if (response.data.status === "success") {
     return response.data.data;
