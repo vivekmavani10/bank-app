@@ -45,24 +45,20 @@ export const createAccount = async (
     }
 
     if (aadhar_number.length !== 12 || !/^\d+$/.test(aadhar_number)) {
-      res
-        .status(400)
-        .json({
-          status: "error",
-          message: "Aadhaar number must be exactly 12 digits",
-        });
+      res.status(400).json({
+        status: "error",
+        message: "Aadhaar number must be exactly 12 digits",
+      });
       return;
     }
 
     const existingAccount = await accountModel.findAccountByUserId(user_id);
 
     if (existingAccount) {
-      res
-        .status(409)
-        .json({
-          status: "error",
-          message: "You already have an account in this bank",
-        });
+      res.status(409).json({
+        status: "error",
+        message: "You already have an account in this bank",
+      });
       return;
     }
 
@@ -96,12 +92,10 @@ export const createAccount = async (
     });
   } catch (error) {
     console.error("Error creating account:", error);
-    res
-      .status(500)
-      .json({
-        status: "error",
-        message: "Failed to submit account application",
-      });
+    res.status(500).json({
+      status: "error",
+      message: "Failed to submit account application",
+    });
   }
 };
 
@@ -145,3 +139,45 @@ export const getAccountDetails = async (
       .json({ status: "error", message: "Failed to fetch account details" });
   }
 };
+
+export const deleteAccountByUUID = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { account_uuid } = req.params;
+
+    if (!account_uuid) {
+      res.status(400).json({
+        status: "error",
+        message: "Account UUID is required",
+      });
+      return;
+    }
+
+    const user_id = await accountModel.getUserIdByAccountUUID(account_uuid);
+
+    if (!user_id) {
+      res.status(404).json({
+        status: "error",
+        message: "Account not found with this UUID",
+      });
+      return;
+    }
+
+    await accountModel.deleteAccount(account_uuid);
+    await accountModel.deleteKycByUserId(user_id);
+
+    res.status(200).json({
+      status: "success",
+      message: "Account and KYC data deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting account:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to delete account",
+    });
+  }
+};
+

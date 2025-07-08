@@ -41,3 +41,13 @@ export const RejectAccount = async (accountUuid: string): Promise<string> => {
     throw new Error(response.data.message || "Failed to reject account");
   }
 };
+
+// Delete account
+export const DeleteAccount = async (accountUuid: string): Promise<string> => {
+  const response = await axiosInstance.delete(`/account/${accountUuid}`);
+  if (response.data.status === "success") {
+    return response.data.message;
+  } else {
+    throw new Error(response.data.message || "Failed to delete account");
+  }
+};

@@ -2,6 +2,7 @@ import express from "express";
 import {
   createAccount,
   getAccountDetails,
+  deleteAccountByUUID,
 } from "../controllers/accountController";
 import { authenticateToken } from "../middlewares/authMiddleware";
 import { uploadAccountFiles } from "../middlewares/uploadsMiddleware";
@@ -17,5 +18,11 @@ accountRouter.post(
 
 // Get logged in user's account details routes
 accountRouter.get("/dashboard", authenticateToken, getAccountDetails);
+
+accountRouter.delete(
+  "/account/:account_uuid",
+  authenticateToken,
+  deleteAccountByUUID
+);
 
 export default accountRouter;

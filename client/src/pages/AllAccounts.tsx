@@ -4,6 +4,7 @@ import {
   FetchAllAccounts,
   ApproveAccount,
   RejectAccount,
+  DeleteAccount,
 } from "../api/adminAccountsApi";
 import { toast } from "react-toastify";
 import Card from "../components/Card";
@@ -72,9 +73,24 @@ const AllAccounts: React.FC = () => {
     }
   };
 
-  const handleDeleteAccount = (accountUuid: string) => {
-    toast.info(`Delete clicked for account UUID: ${accountUuid}`);
-    // TODO: Call delete API and update the state after confirmation
+  const handleDeleteAccount = async (accountUuid: string) => {
+    try {
+      const message = await DeleteAccount(accountUuid);
+      toast.success(message);
+
+      const updatedAccounts = accounts.filter(
+        (acc) => acc.account_uuid !== accountUuid
+      );
+      setAccounts(updatedAccounts);
+
+      const updatedStatuses = statuses.filter(
+        (_, idx) => accounts[idx].account_uuid !== accountUuid
+      );
+      setStatuses(updatedStatuses);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to delete account");
+      console.error("Delete error:", error);
+    }
   };
 
   return (

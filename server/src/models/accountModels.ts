@@ -92,7 +92,6 @@ export class AccountModel {
     return [rows]; // so controller can destructure [rows]
   }
 
-  // Get full account details of user (user + account + KYC)
   async getAccountDetailsByUserId(user_id: number): Promise<any | null> {
     const [rows]: any = await this.db.execute(
       `SELECT 
@@ -106,5 +105,28 @@ export class AccountModel {
       [user_id]
     );
     return rows?.[0] || null;
+  }
+
+  // Get user_id
+  async getUserIdByAccountUUID(account_uuid: string): Promise<number | null> {
+    const [rows]: any = await this.db.execute(
+      "SELECT user_id FROM accounts WHERE account_uuid = ?",
+      [account_uuid]
+    );
+    return rows?.[0]?.user_id || null;
+  }
+
+  // Delete account
+  async deleteAccount(account_uuid: string): Promise<void> {
+    await this.db.execute("DELETE FROM accounts WHERE account_uuid = ?", [
+      account_uuid,
+    ]);
+  }
+
+  // Delete KYC
+  async deleteKycByUserId(user_id: number): Promise<void> {
+    await this.db.execute("DELETE FROM kyc_documents WHERE user_id = ?", [
+      user_id,
+    ]);
   }
 }
