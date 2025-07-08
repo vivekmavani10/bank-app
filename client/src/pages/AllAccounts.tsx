@@ -4,18 +4,23 @@ import {
   FetchAllAccounts,
   ApproveAccount,
   RejectAccount,
+  DeleteAccount,
 } from "../api/adminAccountsApi";
 import { toast } from "react-toastify";
 import Card from "../components/Card";
 import { Trash2 } from "lucide-react";
 import SearchInput from "../components/SearchInput";
 import PageContainer from "../components/PageContainer";
+import Popup from "../components/Popup";
 
 const AllAccounts: React.FC = () => {
   const [accounts, setAccounts] = useState<any[]>([]);
   const [statuses, setStatuses] = useState<string[]>([]);
   const [selectedAccount, setSelectedAccount] = useState<any | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [accountToDelete, setAccountToDelete] = useState<string | null>(null);
 
   const statusOptions = [
     { value: "pending", label: "Pending" },
@@ -71,11 +76,6 @@ const AllAccounts: React.FC = () => {
       console.error("Status update error:", error);
       toast.error(error.message || "Something went wrong. Please try again.");
     }
-  };
-
-  const handleDeleteAccount = (accountUuid: string) => {
-    toast.info(`Delete clicked for account UUID: ${accountUuid}`);
-    // TODO: Call delete API and update the state after confirmation
   };
 
   return (
@@ -157,16 +157,18 @@ const AllAccounts: React.FC = () => {
                     />
                   </td>
                   <td className="py-3 px-4 whitespace-nowrap">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteAccount(account.account_uuid);
-                      }}
-                      className="hover:text-red-700 transition"
-                      title="Delete Account"
-                    >
-                      <Trash2 size={22} />
-                    </button>
+<button
+  onClick={(e) => {
+    e.stopPropagation();
+    setAccountToDelete(account.account_uuid);
+    setShowDeletePopup(true);
+  }}
+  className="text-gray-600 hover:text-red-600 transition-transform transform hover:scale-125 duration-200 ease-in-out"
+  title="Delete Account"
+>
+  <Trash2 size={22} className="transition duration-200 ease-in-out" />
+</button>
+
                   </td>
                 </tr>
               ))
@@ -175,7 +177,7 @@ const AllAccounts: React.FC = () => {
         </table>
       </div>
 
-      {/* Modal */}
+      {/* Card Modal */}
       {selectedAccount && (
         <Card
           account={selectedAccount}
@@ -193,6 +195,38 @@ const AllAccounts: React.FC = () => {
               updatedStatuses[idx] = newStatus;
               setStatuses(updatedStatuses);
             }
+          }}
+        />
+      )}
+
+      {/* Delete Confirmation Popup */}
+      {showDeletePopup && accountToDelete && (
+        <Popup
+          title="Confirm Delete"
+          message="Are you sure you want to delete this account? This action cannot be undone."
+          onConfirm={async () => {
+            try {
+              const message = await DeleteAccount(accountToDelete);
+              toast.success(message);
+
+              setAccounts((prev) =>
+                prev.filter((acc) => acc.account_uuid !== accountToDelete)
+              );
+              setStatuses((prev, idx = -1) =>
+                accounts
+                  .filter((acc) => acc.account_uuid !== accountToDelete)
+                  .map((acc) => acc.status)
+              );
+            } catch (error: any) {
+              toast.error(error.message || "Failed to delete account");
+            } finally {
+              setShowDeletePopup(false);
+              setAccountToDelete(null);
+            }
+          }}
+          onCancel={() => {
+            setShowDeletePopup(false);
+            setAccountToDelete(null);
           }}
         />
       )}
