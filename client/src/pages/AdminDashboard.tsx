@@ -65,7 +65,7 @@ const AdminDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-white py-10 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-white py-10 px-4 sm:px-6 lg:px-8 capitalize">
       <div className="max-w-8xl mx-auto space-y-12">
         {/* Header */}
         <div className="bg-[#004466] text-white p-6 sm:p-8 rounded-2xl shadow-lg">

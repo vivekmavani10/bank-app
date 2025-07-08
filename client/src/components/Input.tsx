@@ -8,7 +8,7 @@ interface InputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   required?: boolean;
-  className?: string; // <-- Accept custom classes
+  className?: string;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -22,18 +22,19 @@ const Input: React.FC<InputProps> = ({
   className = "",
 }) => {
   return (
-    <div className="mb-4">
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+    <div className={`w-full space-y-1 ${className}`}>
+      <label htmlFor={name} className="block text-sm font-medium text-[#004466]">
         {label}
       </label>
       <input
+        id={name}
         type={type}
         name={name}
         value={value}
         onChange={onChange}
         required={required}
         placeholder={placeholder}
-        className={`w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 ${className}`}
+        className="w-full h-10 px-4 py-2 text-sm border border-gray-300 rounded-md bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#004466] focus:border-[#004466] transition"
       />
     </div>
   );

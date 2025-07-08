@@ -106,7 +106,7 @@ const Dashboard: React.FC = () => {
             </div>
             <div className="sm:col-span-2">
               <p className="text-gray-500 mb-1">Address</p>
-              <p className="text-gray-800 font-medium">{user.address}</p>
+              <p className="text-gray-800 font-medium capitalize">{user.address}</p>
             </div>
           </div>
         </Section>
@@ -116,7 +116,7 @@ const Dashboard: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
             <div>
               <p className="text-gray-500 mb-1">Account Type</p>
-              <p className="text-gray-800 font-medium">{user.account_type}</p>
+              <p className="text-gray-800 font-medium capitalize">{user.account_type}</p>
             </div>
             <div>
               <p className="text-gray-500 mb-1">Account Number</p>
@@ -124,7 +124,7 @@ const Dashboard: React.FC = () => {
             </div>
             <div>
               <p className="text-gray-500 mb-1">Status</p>
-              <p className="text-gray-800 font-medium">{getStatusBadge(user.status)}</p>
+              <p className="text-gray-800 font-medium capitalize">{getStatusBadge(user.status)}</p>
             </div>
             <div>
               <p className="text-gray-500 mb-1">Balance</p>
@@ -142,7 +142,7 @@ const Dashboard: React.FC = () => {
             </div>
             <div>
               <p className="text-gray-500 mb-1">PAN Number</p>
-              <p className="text-gray-800 font-medium">{user.pan_number}</p>
+              <p className="text-gray-800 font-medium uppercase">{user.pan_number}</p>
             </div>
             <div className="sm:col-span-2">
               <p className="text-gray-500 mb-1">Submitted On</p>
@@ -155,7 +155,7 @@ const Dashboard: React.FC = () => {
         <Section title="Nominee Information">
           <div className="text-sm">
             <p className="text-gray-500 mb-1">Relationship</p>
-            <p className="text-gray-800 font-medium">{user.nominee_relationship}</p>
+            <p className="text-gray-800 font-medium capitalize">{user.nominee_relationship}</p>
           </div>
         </Section>
       </div>

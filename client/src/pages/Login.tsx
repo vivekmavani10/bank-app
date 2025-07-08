@@ -65,28 +65,30 @@ const Login: React.FC = () => {
             <p className="text-red-500 text-sm text-center mb-3">{error}</p>
           )}
 
-          <Input
-            label="Phone Number"
-            type="tel"
-            name="phone"
-            value={phone}
-            onChange={(e) => {
-              const value = e.target.value;
-              if (/^\d{0,10}$/.test(value)) {
-                setPhone(value);
-              }
-            }}
-            placeholder="Enter your phone number"
-          />
-          <Input
-            label="Password"
-            type="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-          />
-          <Button type="submit" className="w-full mt-4">
+          <div className="space-y-4">
+            <Input
+              label="Phone Number"
+              type="tel"
+              name="phone"
+              value={phone}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d{0,10}$/.test(value)) {
+                  setPhone(value);
+                }
+              }}
+              placeholder="Enter your phone number"
+            />
+            <Input
+              label="Password"
+              type="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+            />
+          </div>
+          <Button type="submit" className="w-full mt-6">
             Login
           </Button>
         </form>

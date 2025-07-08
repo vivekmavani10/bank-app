@@ -28,11 +28,10 @@ const SearchInput: React.FC<SearchInputProps> = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full h-10 pl-10 pr-4 border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-[#004466] focus:border-[#004466] text-sm"
+        className="w-full h-10 pl-10 pr-4 text-sm border border-gray-300 rounded-md bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#004466] focus:border-[#004466] transition"
       />
     </div>
   );
 };
-
 
 export default SearchInput;

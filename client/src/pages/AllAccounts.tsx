@@ -4,12 +4,12 @@ import {
   FetchAllAccounts,
   ApproveAccount,
   RejectAccount,
-  DeleteAccount,
 } from "../api/adminAccountsApi";
 import { toast } from "react-toastify";
 import Card from "../components/Card";
 import { Trash2 } from "lucide-react";
 import SearchInput from "../components/SearchInput";
+import PageContainer from "../components/PageContainer";
 
 const AllAccounts: React.FC = () => {
   const [accounts, setAccounts] = useState<any[]>([]);
@@ -73,149 +73,130 @@ const AllAccounts: React.FC = () => {
     }
   };
 
-  const handleDeleteAccount = async (accountUuid: string) => {
-    try {
-      const message = await DeleteAccount(accountUuid);
-      toast.success(message);
-
-      const updatedAccounts = accounts.filter(
-        (acc) => acc.account_uuid !== accountUuid
-      );
-      setAccounts(updatedAccounts);
-
-      const updatedStatuses = statuses.filter(
-        (_, idx) => accounts[idx].account_uuid !== accountUuid
-      );
-      setStatuses(updatedStatuses);
-    } catch (error: any) {
-      toast.error(error.message || "Failed to delete account");
-      console.error("Delete error:", error);
-    }
+  const handleDeleteAccount = (accountUuid: string) => {
+    toast.info(`Delete clicked for account UUID: ${accountUuid}`);
+    // TODO: Call delete API and update the state after confirmation
   };
 
   return (
-    <div className="min-h-[calc(97vh-90px)] bg-gradient-to-br from-gray-100 to-white py-4 px-2 sm:px-4">
-      <div className="w-full max-w-8xl mx-auto bg-white shadow-xl rounded-2xl p-4 sm:p-6 lg:p-8">
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mb-6 sm:mb-8 text-center sm:text-left">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#004466]">
-            All Accounts
-          </h1>
-          <SearchInput
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search by Account Number"
-            className="w-full sm:w-64"
-          />
-        </div>
-
-        <div className="w-full overflow-x-auto rounded-xl border border-gray-200">
-          <table className="w-full min-w-[700px] text-sm text-gray-700 text-center">
-            <thead className="bg-[#004466] text-white">
+    <PageContainer
+      title="All Accounts"
+      actions={
+        <SearchInput
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search by Account Number"
+          className="w-full sm:w-64"
+        />
+      }
+    >
+      <div className="w-full overflow-x-auto rounded-xl border border-gray-200">
+        <table className="w-full min-w-[900px] sm:min-w-full text-sm text-gray-700 text-center">
+          <thead className="bg-[#004466] text-white">
+            <tr>
+              <th className="py-3 px-4">Name</th>
+              <th className="py-3 px-4">Phone</th>
+              <th className="py-3 px-4">Email</th>
+              <th className="py-3 px-4">Account</th>
+              <th className="py-3 px-4">Type</th>
+              <th className="py-3 px-4">Balance (₹)</th>
+              <th className="py-3 px-4">Status</th>
+              <th className="py-3 px-4">Delete</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {accounts.length === 0 ? (
               <tr>
-                <th className="py-3 px-4">Name</th>
-                <th className="py-3 px-4">Phone</th>
-                <th className="py-3 px-4">Email</th>
-                <th className="py-3 px-4">Account</th>
-                <th className="py-3 px-4">Type</th>
-                <th className="py-3 px-4">Balance (₹)</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4">Delete</th>
+                <td
+                  colSpan={8}
+                  className="py-6 text-center text-gray-500 italic"
+                >
+                  No accounts found
+                </td>
               </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {accounts.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={7}
-                    className="py-6 text-center text-gray-500 italic"
-                  >
-                    No accounts found
+            ) : (
+              accounts.map((account, index) => (
+                <tr
+                  key={index}
+                  className="hover:bg-gray-100 transition cursor-pointer"
+                  onClick={() => setSelectedAccount(account)}
+                >
+                  <td className="py-3 px-4 font-medium capitalize whitespace-nowrap">
+                    {account.full_name}
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    {account.phone_number}
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    {account.email || "N/A"}
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    {account.account_number}
+                  </td>
+                  <td className="py-3 px-4 capitalize whitespace-nowrap">
+                    {account.account_type}
+                  </td>
+                  <td className="py-3 px-4 font-semibold text-green-600 whitespace-nowrap">
+                    ₹{account.balance}
+                  </td>
+                  <td className="py-3 whitespace-nowrap">
+                    <Dropdown
+                      label=""
+                      name="status"
+                      value={statuses[index] || ""}
+                      onChange={(e) =>
+                        handleStatusChange(
+                          index,
+                          e.target.value,
+                          account.account_uuid
+                        )
+                      }
+                      options={statusOptions}
+                      placeholder="Pending"
+                      className="w-28 sm:w-32 md:w-40 rounded-full px-2 py-1 text-sm border border-gray-300"
+                    />
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteAccount(account.account_uuid);
+                      }}
+                      className="hover:text-red-700 transition"
+                      title="Delete Account"
+                    >
+                      <Trash2 size={22} />
+                    </button>
                   </td>
                 </tr>
-              ) : (
-                accounts.map((account, index) => (
-                  <tr
-                    key={index}
-                    className="hover:bg-gray-100 transition cursor-pointer"
-                    onClick={() => setSelectedAccount(account)}
-                  >
-                    <td className="py-3 px-4 font-medium whitespace-nowrap">
-                      {account.full_name}
-                    </td>
-                    <td className="py-3 px-4 whitespace-nowrap">
-                      {account.phone_number}
-                    </td>
-                    <td className="py-3 px-4 whitespace-nowrap">
-                      {account.email || "N/A"}
-                    </td>
-                    <td className="py-3 px-4 whitespace-nowrap">
-                      {account.account_number}
-                    </td>
-                    <td className="py-3 px-4 capitalize whitespace-nowrap">
-                      {account.account_type}
-                    </td>
-                    <td className="py-3 px-4 font-semibold text-green-600 whitespace-nowrap">
-                      ₹{account.balance}
-                    </td>
-                    <td className="py-3 whitespace-nowrap">
-                      <Dropdown
-                        label=""
-                        name="status"
-                        value={statuses[index] || ""}
-                        onChange={(e) =>
-                          handleStatusChange(
-                            index,
-                            e.target.value,
-                            account.account_uuid
-                          )
-                        }
-                        options={statusOptions}
-                        placeholder="Pending"
-                        className="w-28 sm:w-32 md:w-40 rounded-full px-2 py-1 text-sm border border-gray-300"
-                      />
-                    </td>
-                    <td className="py-3 px-4 whitespace-nowrap">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteAccount(account.account_uuid);
-                        }}
-                        className="hover:text-red-700 transition"
-                        title="Delete Account"
-                      >
-                        <Trash2 size={22} />
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Account Detail Modal */}
-        {selectedAccount && (
-          <Card
-            account={selectedAccount}
-            onClose={() => setSelectedAccount(null)}
-            onStatusUpdate={(newStatus: string) => {
-              const updated = [...accounts];
-              const idx = updated.findIndex(
-                (acc) => acc.account_uuid === selectedAccount.account_uuid
-              );
-              if (idx !== -1) {
-                updated[idx].status = newStatus;
-                setAccounts(updated);
-
-                const updatedStatuses = [...statuses];
-                updatedStatuses[idx] = newStatus;
-                setStatuses(updatedStatuses);
-              }
-            }}
-          />
-        )}
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
-    </div>
+
+      {/* Modal */}
+      {selectedAccount && (
+        <Card
+          account={selectedAccount}
+          onClose={() => setSelectedAccount(null)}
+          onStatusUpdate={(newStatus: string) => {
+            const updated = [...accounts];
+            const idx = updated.findIndex(
+              (acc) => acc.account_uuid === selectedAccount.account_uuid
+            );
+            if (idx !== -1) {
+              updated[idx].status = newStatus;
+              setAccounts(updated);
+
+              const updatedStatuses = [...statuses];
+              updatedStatuses[idx] = newStatus;
+              setStatuses(updatedStatuses);
+            }
+          }}
+        />
+      )}
+    </PageContainer>
   );
 };
 

@@ -64,6 +64,7 @@ const Register: React.FC = () => {
           {error && (
             <p className="text-red-500 text-sm text-center mb-3">{error}</p>
           )}
+          <div className="space-y-4">
           <Input
             label="Full Name"
             type="text"
@@ -109,7 +110,8 @@ const Register: React.FC = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm your password"
           />
-          <Button type="submit" className="w-full mt-4">
+          </div>
+          <Button type="submit" className="w-full mt-">
             Register
           </Button>
         </form>
