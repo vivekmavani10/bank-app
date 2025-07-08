@@ -15,24 +15,33 @@ const Popup: React.FC<PopupProps> = ({
   onCancel,
 }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md mx-6">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md mx-4 transition-all duration-300">
+        {/* Title */}
         {title && (
-          <h2 className="text-xl font-bold text-[#004466] text-center mb-4">
+          <h2 className="text-2xl font-bold text-[#004466] text-center mb-4">
             {title}
           </h2>
         )}
-        <p className="text-center text-gray-700 mb-6">{message}</p>
 
+        {/* Message */}
+        <p className="text-center text-gray-600 text-base mb-6 leading-relaxed">
+          {message}
+        </p>
+
+        {/* Buttons */}
         <div className="flex justify-center gap-4">
-          <Button
+          <button
             type="button"
             onClick={onCancel}
-            className="bg-gray-400 text-gray-800 hover:bg-gray-500"
+            className="px-6 py-3 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg bg-white hover:bg-gray-50"
           >
             Cancel
-          </Button>
-          <Button type="button" onClick={onConfirm}>
+          </button>
+          <Button
+            type="button"
+            onClick={onConfirm}
+          >
             Confirm
           </Button>
         </div>

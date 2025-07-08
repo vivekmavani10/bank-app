@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import Input from "../components/Input";
+import Button from "../components/Button";
 import { getProfile, updateProfile } from "../api/editProfileApi";
 
 interface EditProfileProps {
@@ -19,9 +21,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
-      fetchUserProfile();
-    }
+    if (isOpen) fetchUserProfile();
   }, [isOpen]);
 
   const fetchUserProfile = async () => {
@@ -93,47 +93,29 @@ const EditProfile: React.FC<EditProfileProps> = ({ isOpen, onClose }) => {
             )}
 
             <div className="space-y-5">
-              <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  name="full_name"
-                  value={formData.full_name}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">
-                  Mobile Number
-                </label>
-                <input
-                  type="tel"
-                  name="phone_number"
-                  value={formData.phone_number}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg"
-                  required
-                />
-              </div>
+              <Input
+                label="Full Name"
+                name="full_name"
+                value={formData.full_name}
+                onChange={handleChange}
+                placeholder="Enter your full name"
+              />
+              <Input
+                label="Email Address"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter your email address"
+              />
+              <Input
+                label="Mobile Number"
+                type="tel"
+                name="phone_number"
+                value={formData.phone_number}
+                onChange={handleChange}
+                placeholder="Enter your phone number"
+              />
 
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">
@@ -144,6 +126,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ isOpen, onClose }) => {
                   rows={3}
                   value={formData.address}
                   onChange={handleChange}
+                  placeholder="Enter your address"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg resize-none"
                   required
                 />
@@ -157,13 +140,10 @@ const EditProfile: React.FC<EditProfileProps> = ({ isOpen, onClose }) => {
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="px-6 py-3 bg-[#004466] text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
-                >
+
+                <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? "Saving..." : "Save Changes"}
-                </button>
+                </Button>
               </div>
             </div>
           </form>

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.png";
-import Button from "./Button";
-import EditProfile from "../pages/EditProfile"; // Adjust path if needed
+import EditProfile from "../pages/EditProfile";
 import { useNavigate } from "react-router-dom";
+import { LogOut, User } from "lucide-react"; // ← icons
 
 interface DashboardNavbarProps {
   onToggleSidebar: () => void;
@@ -10,8 +10,7 @@ interface DashboardNavbarProps {
 
 const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ onToggleSidebar }) => {
   const navigate = useNavigate();
-
-  const [isEditOpen, setIsEditOpen] = useState(false); // Edit modal toggle
+  const [isEditOpen, setIsEditOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -29,19 +28,27 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ onToggleSidebar }) =>
             <span className="text-2xl font-bold text-[#004466]">KV Bank</span>
           </div>
 
-          {/* Right-side Buttons */}
+          {/* Right-side Icons */}
           <div className="flex items-center space-x-4">
-            {/* Edit Profile Button */}
-            <Button type="button" onClick={() => setIsEditOpen(true)}>
-              Edit Profile
-            </Button>
+            {/* Edit Profile Icon */}
+            <button
+              onClick={() => setIsEditOpen(true)}
+              className="p-2 rounded-full hover:bg-gray-100 transition"
+              title="Edit Profile"
+            >
+              <User className="w-6 h-6 text-[#004466]" />
+            </button>
 
-            {/* Logout Button */}
-            <Button type="submit" onClick={handleLogout}>
-              Logout
-            </Button>
+            {/* Logout Icon */}
+            <button
+              onClick={handleLogout}
+              className="p-2 rounded-full hover:bg-gray-100 transition"
+              title="Logout"
+            >
+              <LogOut className="w-6 h-6 text-red-500" />
+            </button>
 
-            {/* Hamburger Icon for mobile */}
+            {/* Hamburger for mobile */}
             <button className="md:hidden" onClick={onToggleSidebar}>
               <svg
                 className="w-6 h-6 text-black"

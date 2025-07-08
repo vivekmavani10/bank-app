@@ -86,7 +86,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 capitalize">
           <SummaryCard title="Account Number" value={user.account_number} />
           <SummaryCard title="Balance" value={formatCurrency(user.balance)} />
           <SummaryCard title="Status" value={getStatusBadge(user.status)} />

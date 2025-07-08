@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Button from "./Button";
 import logo from "../assets/logo.png";
-import EditProfile from "../pages/EditProfile";
 import { useNavigate } from "react-router-dom";
+import { LogOut } from "lucide-react";
+import Popup from "./Popup"; // Make sure path is correct
 
 interface AdminDashboardNavbarProps {
   onToggleSidebar: () => void;
@@ -12,7 +12,8 @@ const AdminDashboardNavbar: React.FC<AdminDashboardNavbarProps> = ({
   onToggleSidebar,
 }) => {
   const navigate = useNavigate();
-  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -23,21 +24,24 @@ const AdminDashboardNavbar: React.FC<AdminDashboardNavbarProps> = ({
     <>
       <nav className="bg-white p-4 shadow-md fixed top-0 left-0 w-full z-50">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-        
+          {/* Logo */}
           <div className="flex items-center space-x-2">
             <img src={logo} alt="Logo" className="h-9 w-auto" />
             <span className="text-2xl font-bold text-[#004466]">KV Bank</span>
           </div>
 
+          {/* Right Icons */}
           <div className="flex items-center space-x-4">
-            <Button type="button" onClick={() => setIsEditOpen(true)}>
-              Edit Profile
-            </Button>
+            {/* Logout Button with Popup */}
+            <button
+              onClick={() => setShowLogoutPopup(true)}
+              className="p-2 rounded-full hover:bg-gray-100 transition"
+              title="Logout"
+            >
+              <LogOut className="w-6 h-6 text-red-500" />
+            </button>
 
-            <Button type="submit" onClick={handleLogout}>
-              Logout
-            </Button>
-
+            {/* Hamburger */}
             <button className="md:hidden" onClick={onToggleSidebar}>
               <svg
                 className="w-6 h-6 text-black"
@@ -57,7 +61,15 @@ const AdminDashboardNavbar: React.FC<AdminDashboardNavbarProps> = ({
         </div>
       </nav>
 
-      <EditProfile isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} />
+      {/* Logout Popup */}
+      {showLogoutPopup && (
+        <Popup
+          title="Logout Confirmation"
+          message="Are you sure you want to logout?"
+          onCancel={() => setShowLogoutPopup(false)}
+          onConfirm={handleLogout}
+        />
+      )}
     </>
   );
 };
