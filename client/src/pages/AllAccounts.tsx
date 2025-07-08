@@ -157,18 +157,20 @@ const AllAccounts: React.FC = () => {
                     />
                   </td>
                   <td className="py-3 px-4 whitespace-nowrap">
-<button
-  onClick={(e) => {
-    e.stopPropagation();
-    setAccountToDelete(account.account_uuid);
-    setShowDeletePopup(true);
-  }}
-  className="text-gray-600 hover:text-red-600 transition-transform transform hover:scale-125 duration-200 ease-in-out"
-  title="Delete Account"
->
-  <Trash2 size={22} className="transition duration-200 ease-in-out" />
-</button>
-
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setAccountToDelete(account.account_uuid);
+                        setShowDeletePopup(true);
+                      }}
+                      className="text-gray-600 hover:text-red-600 transition-transform transform hover:scale-125 duration-200 ease-in-out"
+                      title="Delete Account"
+                    >
+                      <Trash2
+                        size={22}
+                        className="transition duration-200 ease-in-out"
+                      />
+                    </button>
                   </td>
                 </tr>
               ))

@@ -3,17 +3,32 @@ import { Pool } from "mysql2/promise";
 export class AdminAccountModel {
   constructor(private db: Pool) {}
 
-  async getAllUserAccounts(): Promise<any[]> {
-    const [rows] = await this.db.execute(
-      `SELECT 
+  async getAllUserAccounts(search?: string): Promise<any[]> {
+    let query = `
+    SELECT 
       u.user_id, u.full_name, u.email, u.phone_number, u.address,
       a.account_uuid, a.account_number, a.account_type, a.balance, 
       a.nominee_name, a.nominee_relationship, a.status, a.created_at,
-      k.aadhaar_number, k.pan_number, k.aadhaar_file, k.pan_file, k.status AS kyc_status, k.submitted_at AS kyc_submitted_at
-     FROM users u
-     JOIN accounts a ON u.user_id = a.user_id
-     LEFT JOIN kyc_documents k ON u.user_id = k.user_id`
-    );
+      k.aadhaar_number, k.pan_number, k.aadhaar_file, k.pan_file, 
+      k.status AS kyc_status, k.submitted_at AS kyc_submitted_at
+    FROM users u
+    JOIN accounts a ON u.user_id = a.user_id
+    LEFT JOIN kyc_documents k ON u.user_id = k.user_id
+  `;
+
+    const values: string[] = [];
+
+    if (search) {
+      query += `
+      WHERE 
+        u.full_name LIKE ? OR 
+        a.account_number LIKE ?
+    `;
+      const keyword = `%${search}%`;
+      values.push(keyword, keyword);
+    }
+
+    const [rows] = await this.db.execute(query, values);
     return rows as any[];
   }
 

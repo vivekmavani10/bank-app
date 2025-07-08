@@ -6,7 +6,9 @@ const adminAccountModel = new AdminAccountModel(dbPool);
 
 export const getAllUserAccounts = async (req: Request, res: Response) => {
   try {
-    const accounts = await adminAccountModel.getAllUserAccounts();
+    const search = req.query.search as string | undefined;
+    const accounts = await adminAccountModel.getAllUserAccounts(search);
+
     res.status(200).json({
       status: "success",
       message: "User accounts fetched successfully",
@@ -21,11 +23,17 @@ export const getAllUserAccounts = async (req: Request, res: Response) => {
   }
 };
 
-export const approveAccount = async (req: Request, res: Response): Promise<void> => {
+export const approveAccount = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { account_uuid } = req.params;
 
-    const success = await adminAccountModel.updateAccountStatus(account_uuid, "approved");
+    const success = await adminAccountModel.updateAccountStatus(
+      account_uuid,
+      "approved"
+    );
 
     if (success) {
       res.status(200).json({
@@ -47,11 +55,17 @@ export const approveAccount = async (req: Request, res: Response): Promise<void>
   }
 };
 
-export const rejectAccount = async (req: Request, res: Response): Promise<void> => {
+export const rejectAccount = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { account_uuid } = req.params;
 
-    const success = await adminAccountModel.updateAccountStatus(account_uuid, "rejected");
+    const success = await adminAccountModel.updateAccountStatus(
+      account_uuid,
+      "rejected"
+    );
 
     if (success) {
       res.status(200).json({
