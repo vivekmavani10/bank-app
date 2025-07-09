@@ -55,7 +55,7 @@ const Transaction: React.FC = () => {
       setAmount("");
       setDescription("");
     } catch (err: any) {
-     toast.error(` Transaction failed: ${err.message}`);
+      setError(`Transaction failed: ${err.message}`);
     } finally {
       setShowPopup(false);
     }
