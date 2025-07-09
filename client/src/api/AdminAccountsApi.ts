@@ -12,10 +12,16 @@ interface AllAccounts {
 }
 
 // Fetch all accounts
-export const FetchAllAccounts = async (searchTerm = ""): Promise<AllAccounts[]> => {
+export const FetchAllAccounts = async (
+  searchTerm = "",
+  page = 1,
+  limit = 7
+): Promise<AllAccounts[]> => {
   const response = await axiosInstance.get("/accounts", {
     params: {
-      search: searchTerm.trim(), 
+      search: searchTerm.trim(),
+      page,
+      limit,
     },
   });
 

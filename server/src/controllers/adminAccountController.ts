@@ -7,15 +7,35 @@ const adminAccountModel = new AdminAccountModel(dbPool);
 export const getAllUserAccounts = async (req: Request, res: Response) => {
   try {
     const search = req.query.search as string | undefined;
-    const accounts = await adminAccountModel.getAllUserAccounts(search);
+
+    const page = parseInt(req.query.page as string, 10);
+    const limit = parseInt(req.query.limit as string, 10);
+
+    const safePage = !isNaN(page) && page > 0 ? page : 1;
+    const safeLimit = !isNaN(limit) && limit > 0 ? limit : 10;
+    const offset = (safePage - 1) * safeLimit;
+
+    const accounts = await adminAccountModel.getAllUserAccounts(
+      search,
+      safeLimit,
+      offset
+    );
+    const totalCount = await adminAccountModel.getTotalUserAccountsCount(
+      search
+    );
 
     res.status(200).json({
       status: "success",
       message: "User accounts fetched successfully",
       data: accounts,
+      pagination: {
+        total: totalCount,
+        page: safePage,
+        limit: safeLimit,
+        totalPages: Math.ceil(totalCount / safeLimit),
+      },
     });
-  } catch (error) {
-    console.error("Error fetching user accounts:", error);
+  } catch (error: any) {
     res.status(500).json({
       status: "error",
       message: "Failed to fetch user accounts",

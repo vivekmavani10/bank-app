@@ -111,7 +111,7 @@ const Register: React.FC = () => {
             placeholder="Confirm your password"
           />
           </div>
-          <Button type="submit" className="w-full mt-">
+          <Button type="submit" className="w-full mt-4">
             Register
           </Button>
         </form>
