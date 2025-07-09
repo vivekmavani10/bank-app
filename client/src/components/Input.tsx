@@ -34,7 +34,7 @@ const Input: React.FC<InputProps> = ({
         onChange={onChange}
         required={required}
         placeholder={placeholder}
-        className="w-full h-10 px-4 py-2 text-sm border border-gray-300 rounded-md bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#004466] focus:border-[#004466] transition"
+        className="w-full h-10 px-4 py-2 text-base border border-gray-300 rounded-md bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#004466] focus:border-[#004466] transition"
       />
     </div>
   );

@@ -155,9 +155,9 @@ export const deleteAccountByUUID = async (
       return;
     }
 
-    const user_id = await accountModel.getUserIdByAccountUUID(account_uuid);
+    const accountInfo = await accountModel.getAccountInfoByUUID(account_uuid);
 
-    if (!user_id) {
+    if (!accountInfo) {
       res.status(404).json({
         status: "error",
         message: "Account not found with this UUID",
@@ -165,12 +165,25 @@ export const deleteAccountByUUID = async (
       return;
     }
 
-    await accountModel.deleteAccount(account_uuid);
+    const { user_id, account_number } = accountInfo;
+
+    if (!user_id || !account_number) {
+      res.status(404).json({
+        status: "error",
+        message: "Account not found with this UUID",
+      });
+      return;
+    }
+
+    await accountModel.deleteTransactionsBySender(account_number);
+
     await accountModel.deleteKycByUserId(user_id);
+
+    await accountModel.deleteAccount(account_uuid);
 
     res.status(200).json({
       status: "success",
-      message: "Account and KYC data deleted successfully",
+      message: "Account deleted successfully",
     });
   } catch (error) {
     console.error("Error deleting account:", error);
@@ -180,4 +193,3 @@ export const deleteAccountByUUID = async (
     });
   }
 };
-

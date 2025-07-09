@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import logo from "../assets/logo.png";
 import EditProfile from "../pages/EditProfile";
 import { useNavigate } from "react-router-dom";
-import { LogOut, User } from "lucide-react"; // ← icons
+import { LogOut,  Edit } from "lucide-react"; // ← icons
 
 interface DashboardNavbarProps {
   onToggleSidebar: () => void;
@@ -36,7 +36,7 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ onToggleSidebar }) =>
               className="p-2 rounded-full hover:bg-gray-100 transition"
               title="Edit Profile"
             >
-              <User className="w-6 h-6 text-[#004466]" />
+              <Edit className="w-6 h-6 text-[#004466]" />
             </button>
 
             {/* Logout Icon */}

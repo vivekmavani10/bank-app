@@ -108,22 +108,31 @@ export class AccountModel {
   }
 
   // Get user_id
-  async getUserIdByAccountUUID(account_uuid: string): Promise<number | null> {
+  async getAccountInfoByUUID(
+    account_uuid: string
+  ): Promise<{ user_id: number; account_number: string } | null> {
     const [rows]: any = await this.db.execute(
-      "SELECT user_id FROM accounts WHERE account_uuid = ?",
+      "SELECT user_id, account_number FROM accounts WHERE account_uuid = ?",
       [account_uuid]
     );
-    return rows?.[0]?.user_id || null;
+    if (rows.length > 0) {
+      return {
+        user_id: rows[0].user_id,
+        account_number: rows[0].account_number,
+      };
+    }
+    return null;
   }
-
-  // Delete account
+  async deleteTransactionsBySender(account_number: string): Promise<void> {
+    await this.db.execute("DELETE FROM transactions WHERE sender_account = ?", [
+      account_number,
+    ]);
+  }
   async deleteAccount(account_uuid: string): Promise<void> {
     await this.db.execute("DELETE FROM accounts WHERE account_uuid = ?", [
       account_uuid,
     ]);
   }
-
-  // Delete KYC
   async deleteKycByUserId(user_id: number): Promise<void> {
     await this.db.execute("DELETE FROM kyc_documents WHERE user_id = ?", [
       user_id,
