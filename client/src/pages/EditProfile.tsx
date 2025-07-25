@@ -53,6 +53,10 @@ const EditProfile: React.FC<EditProfileProps> = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const emailRegex =
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|in|net|org|gov|edu|co|io|info|biz|me|us|uk)$/;
+
     if (
       !formData.full_name ||
       !formData.email ||
@@ -62,6 +66,15 @@ const EditProfile: React.FC<EditProfileProps> = ({ isOpen, onClose }) => {
       setError("Please fill in all fields.");
       return;
     }
+
+    if (!emailRegex.test(formData.email)) {
+      setError("Please enter a valid email address (e.g., user@example.com).");
+      return;
+    }
+    if (formData.phone_number.length !== 10) {
+    setError("Mobile number must be exactly 10 digits.");
+    return;
+  }
 
     try {
       setIsSubmitting(true);
@@ -97,9 +110,13 @@ const EditProfile: React.FC<EditProfileProps> = ({ isOpen, onClose }) => {
                 label="Full Name"
                 name="full_name"
                 value={formData.full_name}
-                onChange={handleChange}
+                onChange={(e) => {
+                  const onlyChars = e.target.value.replace(/[^a-zA-Z\s]/g, "");
+                  setFormData({ ...formData, full_name: onlyChars });
+                }}
                 placeholder="Enter your full name"
               />
+
               <Input
                 label="Email Address"
                 type="email"
@@ -113,7 +130,10 @@ const EditProfile: React.FC<EditProfileProps> = ({ isOpen, onClose }) => {
                 type="tel"
                 name="phone_number"
                 value={formData.phone_number}
-                onChange={handleChange}
+                onChange={(e) => {
+                  const onlyNumbers = e.target.value.replace(/\D/g, "");
+                  setFormData({ ...formData, phone_number: onlyNumbers });
+                }}
                 placeholder="Enter your phone number"
               />
 
