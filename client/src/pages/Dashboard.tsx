@@ -153,9 +153,15 @@ const Dashboard: React.FC = () => {
 
         {/* Nominee Info */}
         <Section title="Nominee Information">
+           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <div className="text-sm">
             <p className="text-gray-500 mb-1">Relationship</p>
             <p className="text-gray-800 font-medium capitalize">{user.nominee_relationship}</p>
+          </div>
+          <div className="text-sm">
+            <p className="text-gray-500 mb-1">nominee name</p>
+            <p className="text-gray-800 font-medium capitalize">{user.nominee_name}</p>
+          </div>
           </div>
         </Section>
       </div>

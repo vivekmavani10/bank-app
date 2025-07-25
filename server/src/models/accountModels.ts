@@ -96,7 +96,7 @@ export class AccountModel {
     const [rows]: any = await this.db.execute(
       `SELECT 
          u.user_id, u.full_name, u.phone_number, u.email, u.address,
-         a.account_id, a.account_number, a.account_type, a.balance, a.status,
+         a.account_id, a.account_number, a.account_type, a.balance, a.status,a.nominee_name, a.nominee_relationship,
          k.kyc_id, k.aadhaar_number, k.pan_number, k.status AS kyc_status
        FROM users u
        LEFT JOIN accounts a ON u.user_id = a.user_id
