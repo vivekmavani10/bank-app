@@ -217,9 +217,12 @@ const ApplyAccount: React.FC = () => {
                 label="Aadhar Number *"
                 name="aadhar_number"
                 value={formData.aadhar_number}
-                onChange={(e) =>
-                  setFormData({ ...formData, aadhar_number: e.target.value })
-                }
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^\d{0,12}$/.test(value)) {
+                    setFormData({ ...formData, aadhar_number: value });
+                  }
+                }}
                 required
                 placeholder="Enter 12-digit Aadhar"
               />
@@ -272,9 +275,12 @@ const ApplyAccount: React.FC = () => {
                 label="PAN Number *"
                 name="pan_number"
                 value={formData.pan_number}
-                onChange={(e) =>
-                  setFormData({ ...formData, pan_number: e.target.value })
-                }
+                onChange={(e) => {
+                  let value = e.target.value.toUpperCase();
+                  if (/^\d{0,12}$/.test(value)) {
+                    setFormData({ ...formData, pan_number: value });
+                  }
+                }}
                 required
                 placeholder="Enter PAN"
               />
@@ -291,12 +297,16 @@ const ApplyAccount: React.FC = () => {
                 label="Nominee Name *"
                 name="nominee_name"
                 value={formData.nominee_name}
-                onChange={(e) =>
-                  setFormData({ ...formData, nominee_name: e.target.value })
-                }
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^[a-zA-Z\s]*$/.test(value)) {
+                    setFormData({ ...formData, nominee_name: value });
+                  }
+                }}
                 required
                 placeholder="Enter nominee name"
               />
+
               <Dropdown
                 label="Relationship *"
                 name="nominee_relationship"
@@ -348,4 +358,3 @@ const ApplyAccount: React.FC = () => {
 };
 
 export default ApplyAccount;
-  
