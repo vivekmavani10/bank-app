@@ -128,7 +128,7 @@ const ApplyAccount: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[calc(97vh-90px)] bg-gradient-to-br from-gray-100 to-white py-4 px-4">
+    <div className="min-h-[calc(97vh-90px)] bg-gradient-to-br from-gray-100 to-white md:py-5 md:px-4 sm:px-6">
       <div className="max-w-8xl mx-auto bg-white shadow-xl rounded-2xl p-8">
         <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-[#004466] mb-2">
