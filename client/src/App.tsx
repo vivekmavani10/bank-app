@@ -21,6 +21,8 @@ import Deposit from "./pages/Deposit";
 import TransactionHistory from "./pages/TransactionHistory";
 import Admintransaction from "./pages/AdmintransactionHistory";
 import AdminForgotPassword from "./pages/AdminForgotPassword";
+import Queries from "./pages/Queries";
+import AllQueries from "./pages/AllQueries";
 
 const App: React.FC = () => {
   return (
@@ -96,6 +98,7 @@ const App: React.FC = () => {
           <Route path="apply-account" element={<ApplyAccount />} />
           <Route path="transaction" element={<Transaction />} />
           <Route path="transaction-history" element={<TransactionHistory />}/>
+          <Route path="queries" element={<Queries />} />
         </Route>
 
         {/* Admin Dashboard Routes */}
@@ -112,6 +115,7 @@ const App: React.FC = () => {
           <Route path="deposit" element={<Deposit />}/>
           <Route path="transaction-history" element={<Admintransaction />} />
           <Route path="forgot-password" element={<AdminForgotPassword />} />
+          <Route path="allqueries" element={<AllQueries />} />
         </Route>
       </Routes>
 

@@ -2,15 +2,19 @@ import React, { useState } from "react";
 import logo from "../assets/logo.png";
 import EditProfile from "../pages/EditProfile";
 import { useNavigate } from "react-router-dom";
-import { LogOut,  Edit } from "lucide-react"; // ← icons
+import { LogOut, Edit } from "lucide-react";
+import Popup from "./Popup";
 
 interface DashboardNavbarProps {
   onToggleSidebar: () => void;
 }
 
-const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ onToggleSidebar }) => {
+const DashboardNavbar: React.FC<DashboardNavbarProps> = ({
+  onToggleSidebar,
+}) => {
   const navigate = useNavigate();
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -41,7 +45,7 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ onToggleSidebar }) =>
 
             {/* Logout Icon */}
             <button
-              onClick={handleLogout}
+              onClick={() => setShowLogoutPopup(true)}
               className="p-2 rounded-full hover:bg-gray-100 transition"
               title="Logout"
             >
@@ -70,6 +74,15 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ onToggleSidebar }) =>
 
       {/* Edit Profile Modal */}
       <EditProfile isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} />
+      {/* Logout Confirmation Popup */}
+      {showLogoutPopup && (
+        <Popup
+          title="Logout Confirmation"
+          message="Are you sure you want to logout?"
+          onCancel={() => setShowLogoutPopup(false)}
+          onConfirm={handleLogout}
+        />
+      )}
     </>
   );
 };

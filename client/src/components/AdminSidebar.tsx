@@ -70,6 +70,13 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, onClose }) => {
           >
             Forgot Password
           </Link>
+          <Link
+            to="/admin-dashboard/allqueries"
+            onClick={onClose}
+            className="hover:bg-[#d7555e] text-[#004466] hover:text-white rounded-md px-3 py-2 transition"
+          >
+            All Queries
+          </Link>
         </div>
       </div>
     </div>

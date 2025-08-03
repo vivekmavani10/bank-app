@@ -3,7 +3,7 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import Popup from "../components/Popup";
 import { transferMoney } from "../api/transactionsApi";
-import { toast } from "react-toastify";
+
 
 const Transaction: React.FC = () => {
   const [receiverAccount, setReceiverAccount] = useState("");
@@ -50,7 +50,7 @@ const Transaction: React.FC = () => {
         description,
       });
 
-      toast.success(" Transaction successful!");
+      // toast.success(" Transaction successful!");
       setReceiverAccount("");
       setAmount("");
       setDescription("");
