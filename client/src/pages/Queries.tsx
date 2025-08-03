@@ -3,10 +3,19 @@ import PageContainer from "../components/PageContainer";
 import Button from "../components/Button";
 import { toast } from "react-toastify";
 
-const Queries = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [queryText, setQueryText] = useState("");
-  const [submittedQueries, setSubmittedQueries] = useState([
+// Type Definitions
+interface Query {
+  id: number;
+  text: string;
+  submittedAt: string;
+  isRead: boolean;
+  reply: string;
+}
+
+const Queries: React.FC = () => {
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [queryText, setQueryText] = useState<string>("");
+  const [submittedQueries, setSubmittedQueries] = useState<Query[]>([
     {
       id: 1,
       text: "I'm having trouble logging into my account. When I enter my credentials, it shows 'Invalid password' even though I'm sure the password is correct.",
@@ -22,11 +31,11 @@ const Queries = () => {
       reply: "We acknowledge the performance issue you're experiencing. Our development team is currently working on optimizing the dashboard loading speed. We expect to deploy the fix by next week. Thank you for your patience."
     }
   ]);
-  const [selectedQuery, setSelectedQuery] = useState(null);
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [editingQuery, setEditingQuery] = useState(null);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editText, setEditText] = useState("");
+  const [selectedQuery, setSelectedQuery] = useState<Query | null>(null);
+  const [showDetailsModal, setShowDetailsModal] = useState<boolean>(false);
+  const [editingQuery, setEditingQuery] = useState<Query | null>(null);
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
+  const [editText, setEditText] = useState<string>("");
 
   // Handle form submission
   const handleSubmit = () => {
@@ -35,7 +44,7 @@ const Queries = () => {
       return;
     }
 
-    const newQuery = {
+    const newQuery: Query = {
       id: Date.now(),
       text: queryText,
       submittedAt: new Date().toLocaleString(),
@@ -50,10 +59,9 @@ const Queries = () => {
   };
 
   // View query details and mark as read
-  const viewQueryDetails = (query) => {
-    // Mark as read when viewing
+  const viewQueryDetails = (query: Query) => {
     if (!query.isRead) {
-      setSubmittedQueries(prev => 
+      setSubmittedQueries(prev =>
         prev.map(q => q.id === query.id ? { ...q, isRead: true } : q)
       );
     }
@@ -62,7 +70,7 @@ const Queries = () => {
   };
 
   // Edit query
-  const handleEdit = (query) => {
+  const handleEdit = (query: Query) => {
     setEditingQuery(query);
     setEditText(query.text);
     setShowEditModal(true);
@@ -76,7 +84,7 @@ const Queries = () => {
     }
 
     setSubmittedQueries(prev =>
-      prev.map(q => q.id === editingQuery.id ? { ...q, text: editText } : q)
+      prev.map(q => q.id === editingQuery?.id ? { ...q, text: editText } : q)
     );
     setShowEditModal(false);
     setEditingQuery(null);
@@ -85,7 +93,7 @@ const Queries = () => {
   };
 
   // Delete query
-  const handleDelete = (queryId) => {
+  const handleDelete = (queryId: number) => {
     if (window.confirm("Are you sure you want to delete this query?")) {
       setSubmittedQueries(prev => prev.filter(q => q.id !== queryId));
       toast.success("Query deleted successfully!");
@@ -105,7 +113,6 @@ const Queries = () => {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg">
-            {/* Modal Header */}
             <div className="bg-white border-b border-gray-200 px-6 py-4 rounded-t-xl">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-gray-800">Submit Your Query</h2>
@@ -120,22 +127,20 @@ const Queries = () => {
               </div>
             </div>
 
-            {/* Modal Body */}
             <div className="px-6 py-4">
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Query Description *
                 </label>
                 <textarea
-                  className="w-full border border-gray-300 rounded-lg p-3 resize-none h-32 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full border border-gray-300 rounded-lg p-3 resize-none h-32"
                   placeholder="Please describe your issue in detail..."
                   value={queryText}
-                  onChange={(e) => setQueryText(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setQueryText(e.target.value)}
                 />
               </div>
             </div>
 
-            {/* Modal Footer */}
             <div className="bg-gray-50 px-6 py-4 rounded-b-xl border-t border-gray-200">
               <div className="flex gap-3 justify-end">
                 <button
@@ -177,10 +182,10 @@ const Queries = () => {
                   Query Description *
                 </label>
                 <textarea
-                  className="w-full border border-gray-300 rounded-lg p-3 resize-none h-32 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full border border-gray-300 rounded-lg p-3 resize-none h-32"
                   placeholder="Please describe your issue in detail..."
                   value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEditText(e.target.value)}
                 />
               </div>
             </div>
@@ -215,7 +220,7 @@ const Queries = () => {
                       setShowDetailsModal(false);
                       handleEdit(selectedQuery);
                     }}
-                    className="px-3 py-1 bg-[#004466] hover:bg-blue-600 text-white text-sm rounded-md transition-colors"
+                    className="px-3 py-1 bg-[#004466] hover:bg-blue-600 text-white text-sm rounded-md"
                   >
                     Edit
                   </button>
@@ -224,7 +229,7 @@ const Queries = () => {
                       setShowDetailsModal(false);
                       handleDelete(selectedQuery.id);
                     }}
-                    className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded-md transition-colors"
+                    className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded-md"
                   >
                     Delete
                   </button>
@@ -244,26 +249,20 @@ const Queries = () => {
               <div className="mb-4">
                 <span className="text-sm text-gray-500">Submitted: {selectedQuery.submittedAt}</span>
               </div>
-              
               <div className="mb-6">
                 <h3 className="font-medium text-gray-800 mb-2">Your Query:</h3>
                 <p className="text-gray-600 whitespace-pre-wrap bg-gray-50 p-4 rounded-lg border">
                   {selectedQuery.text}
                 </p>
               </div>
-
-              {selectedQuery.reply && (
+              {selectedQuery.reply ? (
                 <div>
                   <h3 className="font-medium text-gray-800 mb-2">Support Reply:</h3>
                   <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
-                    <p className="text-gray-700 whitespace-pre-wrap">
-                      {selectedQuery.reply}
-                    </p>
+                    <p className="text-gray-700 whitespace-pre-wrap">{selectedQuery.reply}</p>
                   </div>
                 </div>
-              )}
-
-              {!selectedQuery.reply && (
+              ) : (
                 <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
                   <p className="text-yellow-700 text-sm">
                     <span className="font-medium">Status:</span> Waiting for support team response
@@ -275,7 +274,7 @@ const Queries = () => {
         </div>
       )}
 
-      {/* Queries List */}
+      {/* Queries Table */}
       <div className="mt-6">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
@@ -323,12 +322,10 @@ const Queries = () => {
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => viewQueryDetails(query)}
-                            className="px-3 py-1 bg-[#004466] hover:bg-blue-600 text-white text-xs rounded-md transition-colors"
+                            className="px-3 py-1 bg-[#004466] hover:bg-blue-600 text-white text-xs rounded-md"
                           >
                             View
                           </button>
-                          
-                         
                         </div>
                       </td>
                     </tr>
