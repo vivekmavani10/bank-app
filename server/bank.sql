@@ -82,3 +82,21 @@ CHANGE COLUMN `account_type` `account_type` VARCHAR(50) NULL DEFAULT 'savings' ,
 -- add column in accounts table
 ALTER TABLE `bank`.`accounts` 
 ADD COLUMN `account_uuid` VARCHAR(50) NULL AFTER `nominee_relationship`;
+
+-- Query table
+CREATE TABLE `query` (
+  `query_uuid` varchar(50) NOT NULL,
+  `user_id` int DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `query` longtext,
+  `reply` longtext,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `is_customer_read` tinyint(1) DEFAULT NULL,
+  `is_admin_read` tinyint(1) DEFAULT NULL,
+  `is_replied` tinyint(1) DEFAULT NULL,
+  `replied_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id_fkk_idx` (`user_id`),
+  CONSTRAINT `user_id_fkk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci

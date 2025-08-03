@@ -131,7 +131,7 @@ const ApplyAccount: React.FC = () => {
     <div className="min-h-[calc(97vh-90px)] bg-gradient-to-br from-gray-100 to-white md:py-5 md:px-4 sm:px-6">
       <div className="max-w-8xl mx-auto bg-white shadow-xl rounded-2xl p-8">
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-[#004466] mb-2">
+          <h1 className="text-4xl text-center sm:text-3xl lg:text-4xl font-extrabold text-[#004466] mb-2">
             Apply for a Bank Account
           </h1>
           <p className="text-md text-gray-600">
