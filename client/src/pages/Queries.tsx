@@ -1,77 +1,71 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PageContainer from "../components/PageContainer";
 import Button from "../components/Button";
 import SubmitQuery from "../components/SubmitQuery";
 import { toast } from "react-toastify";
 import { Eye, Pencil, Trash2 } from "lucide-react";
-
-interface Query {
-  id: number;
-  text: string;
-  submittedAt: string;
-  isRead: boolean;
-  reply: string;
-  repliedAt?: string;
-}
+import {
+  getQueries,
+  submitQuery as submitQueryAPI,
+  updateQuery as updateQueryAPI,
+  deleteQuery as deleteQueryAPI,
+  QueryResponse,
+} from "../api/queryApi";
 
 const Queries: React.FC = () => {
-  const [submittedQueries, setSubmittedQueries] = useState<Query[]>([
-    {
-      id: 1,
-      text: "I'm having trouble logging into my account. When I enter my credentials, it shows 'Invalid password' even though I'm sure the password is correct.",
-      submittedAt: "2025-08-01 14:30:22",
-      isRead: false,
-      reply:
-        "Thank you for contacting us. We've identified the issue with your account. Please try resetting your password using the 'Forgot Password' link on the login page. If the issue persists, please contact our technical team directly.",
-      repliedAt: "2025-08-01 15:10:00",
-    },
-    {
-      id: 2,
-      text: "The dashboard page is loading very slowly and sometimes shows a blank screen. This happens on both Chrome and Firefox browsers.",
-      submittedAt: "2025-07-30 09:15:45",
-      isRead: true,
-      reply:
-        "We acknowledge the performance issue you're experiencing. Our development team is currently working on optimizing the dashboard loading speed. We expect to deploy the fix by next week. Thank you for your patience.",
-      repliedAt: "2025-07-30 10:20:00",
-    },
-  ]);
-
+  const [submittedQueries, setSubmittedQueries] = useState<QueryResponse[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [queryText, setQueryText] = useState("");
+  const [editUuid, setEditUuid] = useState<string | null>(null);
 
-  const handleSubmit = () => {
+  const fetchQueries = async () => {
+    try {
+      const data = await getQueries();
+      setSubmittedQueries(data);
+    } catch (err) {
+      console.error("Failed to fetch queries.");
+    }
+  };
+
+  useEffect(() => {
+    fetchQueries();
+  }, []);
+
+  const handleSubmit = async () => {
     if (!queryText.trim()) {
       toast.warn("Please enter your query.");
       return;
     }
 
-    const newQuery: Query = {
-      id: Date.now(),
-      text: queryText.trim(),
-      submittedAt: new Date().toLocaleString("en-IN"),
-      isRead: false,
-      reply: "",
-    };
+    try {
+      if (editUuid) {
+        await updateQueryAPI(editUuid, { query: queryText.trim() });
+      } else {
+        await submitQueryAPI({ query: queryText.trim() });
+      }
 
-    setSubmittedQueries((prev) => [newQuery, ...prev]);
-    setQueryText("");
-    setShowModal(false);
-    toast.success("Query submitted successfully!");
+      setQueryText("");
+      setEditUuid(null);
+      setShowModal(false);
+      fetchQueries();
+    } catch (err) {}
   };
 
-  const handleEdit = (query: Query) => {
-    setQueryText(query.text);
+  const handleEdit = (query: QueryResponse) => {
+    setQueryText(query.query);
+    setEditUuid(query.query_uuid);
     setShowModal(true);
-    // Optionally: Track the query being edited using a state if needed
   };
 
-  const handleDelete = (id: number) => {
-    setSubmittedQueries((prev) => prev.filter((q) => q.id !== id));
-    toast.success("Query deleted.");
+  const handleDelete = async (query_uuid: string) => {
+    try {
+      await deleteQueryAPI(query_uuid);
+      fetchQueries();
+    } catch (err) {}
   };
 
-  const handleView = (query: Query) => {
-    toast.info(`Query #${query.id}: ${query.text}`);
+  const handleView = (query: QueryResponse) => {
+    toast.info(`Query: ${query.query}`);
   };
 
   return (
@@ -87,7 +81,10 @@ const Queries: React.FC = () => {
         <SubmitQuery
           queryText={queryText}
           onChange={setQueryText}
-          onClose={() => setShowModal(false)}
+          onClose={() => {
+            setShowModal(false);
+            setEditUuid(null);
+          }}
           onSubmit={handleSubmit}
         />
       )}
@@ -98,13 +95,13 @@ const Queries: React.FC = () => {
         ) : (
           submittedQueries.map((q) => (
             <div
-              key={q.id}
+              key={q.query_uuid}
               className={`border border-gray-200 rounded-xl p-5 shadow-sm ${
-                q.reply ? "bg-emerald-50" : "bg-white"
+                q.is_replied ? "bg-emerald-50" : "bg-white"
               }`}
             >
               <div className="flex justify-between items-start">
-                <div className="text-gray-800 font-medium text-base">{q.text}</div>
+                <div className="text-gray-800 font-medium text-base">{q.query}</div>
                 <div className="flex gap-4 text-gray-500">
                   <Eye
                     className="w-5 h-5 cursor-pointer hover:text-blue-600"
@@ -116,19 +113,21 @@ const Queries: React.FC = () => {
                   />
                   <Trash2
                     className="w-5 h-5 cursor-pointer hover:text-red-600"
-                    onClick={() => handleDelete(q.id)}
+                    onClick={() => handleDelete(q.query_uuid)}
                   />
                 </div>
               </div>
 
               <div className="mt-3 text-sm text-gray-500">
-                Submitted At: {q.submittedAt}
-                {q.reply && q.repliedAt && (
-                  <div className="mt-1">Replied At: {q.repliedAt}</div>
+                Submitted At: {new Date(q.created_at).toLocaleString("en-IN")}
+                {q.updated_at && (
+                  <div className="mt-1">
+                    Updated At: {new Date(q.updated_at).toLocaleString("en-IN")}
+                  </div>
                 )}
               </div>
 
-              {q.reply && (
+              {q.is_replied && q.reply && (
                 <div className="mt-4 p-4 bg-white border border-gray-200 rounded-lg text-sm text-gray-700">
                   <strong className="text-gray-800 block mb-1">Reply:</strong>
                   {q.reply}

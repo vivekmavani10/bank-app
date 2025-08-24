@@ -37,4 +37,17 @@ export class QueryModel {
       query_uuid,
     ]);
   }
+  async getUserQueries(user_id: number): Promise<any[]> {
+  const [rows] = await this.db.execute(
+    `SELECT query_uuid, query, created_at, updated_at, is_customer_read, is_admin_read, is_replied 
+     FROM query 
+     WHERE user_id = ? 
+     ORDER BY created_at DESC`,
+    [user_id]
+  );
+  return rows as any[];
 }
+
+}
+
+

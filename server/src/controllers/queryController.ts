@@ -95,3 +95,25 @@ export const deleteQuery = async (req: Request, res: Response): Promise<void> =>
         res.status(500).json({ status: "error", message: "Query delete failed" });
     }
 }
+export const getUserQueries = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user_id = (req as any).user?.user_id;
+
+    if (!user_id) {
+      res.status(401).json({
+        status: "error",
+        message: "Unauthorized",
+      });
+      return;
+    }
+
+    const queries = await queryModel.getUserQueries(user_id);
+
+    res.status(200).json({
+      status: "success",
+      data: queries,
+    });
+  } catch (err) {
+    res.status(500).json({ status: "error", message: "Failed to fetch queries" });
+  }
+};
