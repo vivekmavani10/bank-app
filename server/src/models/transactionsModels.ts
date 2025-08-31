@@ -115,29 +115,30 @@ export class TransactionModel {
   async getTransactionHistory(user_id: number): Promise<any[]> {
     const [rows]: any = await this.db.execute(
       `
-      SELECT 
-        t.transaction_id,
-        t.transaction_uuid,
-        t.sender_account,
-        t.receiver_account,
-        t.amount,
-        t.transaction_type,
-        t.status,
-        t.description,
-        t.created_at
-      FROM transactions t
-      INNER JOIN accounts a_sender ON t.sender_account = a_sender.account_number
-      INNER JOIN accounts a_receiver ON t.receiver_account = a_receiver.account_number
-      WHERE a_sender.user_id = ? OR a_receiver.user_id = ?
-      ORDER BY t.created_at DESC
-      `,
+    SELECT 
+      t.transaction_id,
+      t.transaction_uuid,
+      t.sender_account,
+      t.receiver_account,
+      t.amount,
+      t.transaction_type,
+      t.status,
+      t.description,
+      t.created_at
+    FROM transactions t
+    LEFT JOIN accounts a_sender ON t.sender_account = a_sender.account_number
+    LEFT JOIN accounts a_receiver ON t.receiver_account = a_receiver.account_number
+    WHERE a_sender.user_id = ? OR a_receiver.user_id = ?
+    ORDER BY t.created_at DESC
+    `,
       [user_id, user_id]
     );
 
     return rows;
   }
-async getAllTransactions(type: string = "all"): Promise<any[]> {
-  let query = `
+
+  async getAllTransactions(type: string = "all"): Promise<any[]> {
+    let query = `
     SELECT 
       t.transaction_id,
       t.transaction_uuid,
@@ -155,19 +156,16 @@ async getAllTransactions(type: string = "all"): Promise<any[]> {
     LEFT JOIN accounts a_receiver ON t.receiver_account = a_receiver.account_number
   `;
 
-  const params: any[] = [];
+    const params: any[] = [];
 
-  if (type && type !== "all") {
-    query += ` WHERE t.transaction_type = ?`;
-    params.push(type);
+    if (type && type !== "all") {
+      query += ` WHERE t.transaction_type = ?`;
+      params.push(type);
+    }
+
+    query += ` ORDER BY t.created_at DESC`;
+
+    const [rows]: any = await this.db.execute(query, params);
+    return rows;
   }
-
-  query += ` ORDER BY t.created_at DESC`;
-
-  const [rows]: any = await this.db.execute(query, params);
-  return rows;
-}
-
-
-
 }
